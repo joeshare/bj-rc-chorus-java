@@ -1,0 +1,41 @@
+{
+  "name": "workflow-stream",
+  "description": "my workflow for test3",
+  "version": 1,
+  "tasks": [
+      {
+        "name": "chorus_uuid123",
+        "taskReferenceName": "",
+        "type": "SIMPLE",
+        "inputParameters": {
+          "ai1": "${workflow.input.wi1}",
+          "ai2": "${workflow.input.wi2}"
+        }
+      },
+      {
+        "name": "chorus_uuid333",
+        "taskReferenceName": "",
+        "type": "SIMPLE",
+        "inputParameters": {
+          "ai1": "${workflow.input.wi1}",
+          "ai2": "${workflow.input.wi2}"
+        }
+      },
+       {
+          "name": "chorus_uuid444",
+          "taskReferenceName": "",
+          "type": "SIMPLE",
+          "inputParameters": {
+            "ai1": "${workflow.input.wi1}",
+            "ai2": "${workflow.input.wi2}"
+          }
+        }
+  ],
+  "outputParameters": {
+      "ao1": "${node1.output.ao1}",
+      "ao2": "${node1.output.ao2}",
+      "bo1": "${node2.output.bo1}",
+      "bo2": "${node2.output.bo2}"
+  },
+  "schemaVersion": 2
+}

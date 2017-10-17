@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.chorus.das.dao.ProjectMemberMappingDOMapper" >
+  <resultMap id="BaseResultMap2" type="cn.rongcapital.chorus.das.entity.ProjectInfoDO">
+    <id column="project_id" property="projectId" jdbcType="BIGINT" />
+    <id column="project_member_id" property="projectMemberId" jdbcType="BIGINT" />
+    <result column="project_code" property="projectCode" jdbcType="VARCHAR" />
+    <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+    <result column="project_desc" property="projectDesc" jdbcType="VARCHAR" />
+    <result column="project_manager_id" property="projectManagerId" jdbcType="VARCHAR" />
+    <result column="manager_telephone" property="managerTelephone" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="ROLE_ID" property="roleId" jdbcType="VARCHAR" />
+    <result column="ROLE_CODE" property="roleCode" jdbcType="VARCHAR" />
+    <result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap type="cn.rongcapital.chorus.das.entity.ProjectMemberRoleCount" id="memCountResultMap">
+    <result column="role_id" property="roleId"/>
+    <result column="role_name" property="roleName"/>
+    <result column="count" property="count"/>
+  </resultMap>
+
+  <select id="selectMemberByProjectId" resultMap="BaseResultMap2">
+    SELECT
+      pi.project_id,
+      pi.project_code,
+      pi.project_name,
+      pi.project_desc,
+      pi.project_manager_id,
+      pi.manager_telephone,
+      pi.create_user_id,
+      pmm.user_id,
+      pmm.role_id,
+      pmm.project_member_id,
+      r.ROLE_CODE,
+      r.ROLE_NAME
+    FROM project_member_mapping pmm
+    LEFT JOIN project_info pi
+    ON pmm.project_id = pi.project_id
+    LEFT JOIN t_role r
+    ON pmm.role_id = r.ROLE_ID
+    WHERE pmm.project_id = #{projectId} AND pi.create_user_id <![CDATA[ <> ]]> pmm.user_id
+  </select>
+  <select id="selectMemberByProjectIdAndRole" resultMap="BaseResultMap2">
+    SELECT
+    pi.project_id,
+    pi.project_code,
+    pi.project_name,
+    pi.project_desc,
+    pi.project_manager_id,
+    pi.manager_telephone,
+    pi.create_user_id,
+    pmm.user_id,
+    pmm.role_id,
+    pmm.project_member_id,
+    r.ROLE_CODE,
+    r.ROLE_NAME,
+    u.user_name
+    FROM project_member_mapping pmm
+    LEFT JOIN project_info pi
+    ON pmm.project_id = pi.project_id
+    LEFT JOIN t_user u
+    ON u.user_id = pmm.user_id
+    LEFT JOIN t_role r
+    ON pmm.role_id = r.ROLE_ID
+    WHERE pmm.project_id = #{projectId} AND pi.create_user_id <![CDATA[ <> ]]> pmm.user_id
+    AND pmm.role_id = #{roleId}
+  </select>
+  
+  <select id="selectMembers" resultMap="BaseResultMap2">
+    SELECT
+    pi.project_id,
+    pi.project_code,
+    pi.project_name,
+    pi.project_desc,
+    pi.project_manager_id,
+    pi.manager_telephone,
+    pi.create_user_id,
+    pmm.user_id,
+    pmm.role_id,
+    pmm.project_member_id,
+    r.ROLE_CODE,
+    r.ROLE_NAME,
+    u.user_name,
+    u.email
+    FROM project_member_mapping pmm
+    LEFT JOIN project_info pi
+    ON pmm.project_id = pi.project_id
+    LEFT JOIN t_user u
+    ON u.user_id = pmm.user_id
+    LEFT JOIN t_role r
+    ON pmm.role_id = r.ROLE_ID
+    WHERE pmm.project_id = #{projectId} 
+    AND pmm.role_id = #{roleId}
+  </select>
+  <select id="selectCountMemberByProjectId" resultType="java.lang.Integer">
+    SELECT
+    count(1) as count
+    FROM project_member_mapping pmm
+    LEFT JOIN project_info pi
+    ON pmm.project_id = pi.project_id
+    LEFT JOIN t_role r
+    ON pmm.role_id = r.ROLE_ID
+    LEFT JOIN t_user u
+    ON u.user_id = pmm.user_id
+    WHERE pmm.project_id = #{projectId} AND pi.create_user_id <![CDATA[ <> ]]> pmm.user_id
+  </select>
+
+  <delete id="deleteByProjectAndUserId" >
+    delete from project_member_mapping
+    where project_id = #{projectId,jdbcType=BIGINT}
+    and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+
+  <update id="updateByProjectAndUserId" parameterType="cn.rongcapital.chorus.das.entity.ProjectMemberMapping" >
+    update project_member_mapping
+    set project_id = #{projectId,jdbcType=BIGINT},
+    role_id = #{roleId,jdbcType=VARCHAR},
+    user_id = #{userId,jdbcType=VARCHAR},
+    update_time=#{updateTime, jdbcType=TIMESTAMP}
+    where project_id = #{projectId,jdbcType=BIGINT} and user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+
+    <select id="statProjectMember" resultMap="memCountResultMap">
+        SELECT
+            role.ROLE_ID as role_id,
+            role.ROLE_NAME as role_name,
+            count(user_id) as count
+            FROM
+            project_member_mapping AS pMap
+        INNER JOIN t_role role ON role.ROLE_ID = pMap.role_id
+        WHERE project_id = #{projectId}
+        GROUP BY role.ROLE_ID
+    </select>
+
+
+  <select id="selectMemberByProjectIdAndUserId" resultMap="BaseResultMap2">
+    SELECT
+    pi.project_id,
+    pi.project_code,
+    pi.project_name,
+    pi.project_desc,
+    pi.project_manager_id,
+    pi.manager_telephone,
+    pi.create_user_id,
+    pmm.user_id,
+    pmm.role_id,
+    pmm.project_member_id,
+    r.ROLE_CODE,
+    r.ROLE_NAME
+    FROM project_member_mapping pmm
+    LEFT JOIN project_info pi
+    ON pmm.project_id = pi.project_id
+    LEFT JOIN t_role r
+    ON pmm.role_id = r.ROLE_ID
+    WHERE pmm.project_id = #{projectId}
+    AND pmm.user_id = #{userId}
+  </select>
+</mapper>

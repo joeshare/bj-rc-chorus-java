@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.chorus.das.dao.TableAuthorityDOMapper" >
+  <resultMap id="DOResultMap" type="cn.rongcapital.chorus.das.entity.TableAuthorityDO" >
+    <result column="project_id" property="projectId" jdbcType="BIGINT" />
+    <result column="project_code" property="projectCode" jdbcType="VARCHAR" />
+    <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+    <result column="table_info_id" property="tableInfoId" jdbcType="BIGINT" />
+    <result column="table_name" property="tableName" jdbcType="VARCHAR" />
+    <result column="column_info_id" property="columnInfoId" jdbcType="BIGINT" />
+    <result column="column_name" property="columnName" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="end_date" property="endDate" jdbcType="DATE" />
+  </resultMap>
+    <resultMap id="WithTableDOResultMap" type="cn.rongcapital.chorus.das.entity.TableAuthorityWithTableDO" >
+        <result column="project_id" property="projectId" jdbcType="BIGINT" />
+        <result column="project_code" property="projectCode" jdbcType="VARCHAR" />
+        <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+        <result column="table_info_id" property="tableInfoId" jdbcType="BIGINT" />
+        <result column="table_name" property="tableName" jdbcType="VARCHAR" />
+        <result column="user_id" property="userId" jdbcType="VARCHAR" />
+        <result column="end_date" property="endDate" jdbcType="DATE" />
+    </resultMap>
+  <select id="selectByUserId" resultMap="DOResultMap" parameterType="java.lang.String" >
+   SELECT * FROM
+	(
+		SELECT
+			c.project_id,
+			d.project_code,
+			d.project_name,
+			b.table_info_id,
+			c.table_name,
+			b.column_info_id,
+			e.column_name,
+			b.user_id
+		FROM
+			table_authority b
+		LEFT JOIN table_info c ON b.table_info_id = c.table_info_id
+		LEFT JOIN project_info d ON c.project_id = d.project_id
+		JOIN column_info e ON b.column_info_id = e.column_info_id
+		WHERE b.user_id = #{userId,jdbcType=VARCHAR}
+		UNION
+			SELECT
+				b.project_id,
+				b.project_code,
+				b.project_name,
+				c.table_info_id,
+				c.table_name,
+				d.column_info_id,
+				d.column_name,
+				a.user_id
+			FROM
+				(
+					SELECT
+						project_id,
+						user_id
+					FROM
+						project_member_mapping
+					WHERE
+						user_id= #{userId,jdbcType=VARCHAR}) a
+					JOIN project_info b ON a.project_id = b.project_id
+					JOIN table_info c ON b.project_id = c.project_id
+					LEFT JOIN column_info d ON c.table_info_id = d.table_info_id
+				) t
+			ORDER BY
+				t.project_id,
+				table_info_id,
+				column_info_id
+
+  </select>
+
+    <select id="selectByAppliedUserId" resultMap="DOResultMap">
+        SELECT pi.project_id, pi.project_code, pi.project_name, ti.table_info_id, ti.table_name
+	        , ci.column_info_id, ci.column_name, ta.user_id
+        FROM table_authority ta
+        INNER JOIN table_info ti ON ti.table_info_id = ta.table_info_id
+        INNER JOIN project_info pi ON pi.project_id = ti.project_id
+        INNER JOIN column_info ci ON ci.column_info_id = ta.column_info_id
+        WHERE ta.user_id = #{userId,jdbcType=VARCHAR}
+        ORDER BY pi.project_id, ti.table_info_id, ci.column_info_id
+    </select>
+
+    <select id="selectByAdminAndOwnerId" resultMap="DOResultMap">
+        SELECT pi.project_id,
+            pi.project_code,
+            pi.project_name,
+            ti.table_info_id,
+            ti.table_name,
+            ci.column_info_id,
+            ci.column_name,
+            pmm.user_id
+        FROM project_member_mapping pmm
+        INNER JOIN project_info pi ON pi.project_id = pmm.project_id
+        INNER JOIN table_info ti ON ti.project_id = pmm.project_id
+        INNER JOIN column_info ci ON ci.table_info_id = ti.table_info_id
+        INNER JOIN t_role r ON r.role_code in (SELECT role_code from t_role) AND r.role_id = pmm.role_id
+        WHERE pmm.user_id = #{userId,jdbcType=VARCHAR}
+        ORDER BY pi.project_id,
+            ti.table_info_id,
+            ci.column_info_id
+    </select>
+
+    <select id="selectTableByAppliedUserId" resultMap="WithTableDOResultMap">
+        SELECT DISTINCT pi.project_id, pi.project_code, pi.project_name, ti.table_info_id, ti.table_name
+        , ta.user_id
+        FROM table_authority ta
+        INNER JOIN table_info ti ON ti.table_info_id = ta.table_info_id
+        INNER JOIN project_info pi ON pi.project_id = ti.project_id
+        WHERE ta.user_id = #{userId,jdbcType=VARCHAR}
+        ORDER BY pi.project_id, ti.table_info_id
+    </select>
+
+    <select id="selectTableByAdminAndOwnerId" resultMap="WithTableDOResultMap">
+        SELECT pi.project_id,
+        pi.project_code,
+        pi.project_name,
+        ti.table_info_id,
+        ti.table_name,
+        pmm.user_id
+        FROM project_member_mapping pmm
+        INNER JOIN project_info pi ON pi.project_id = pmm.project_id
+        INNER JOIN table_info ti ON ti.project_id = pmm.project_id
+        INNER JOIN t_role r ON r.role_code in (SELECT role_code from t_role) AND r.role_id = pmm.role_id
+        WHERE pmm.user_id = #{userId,jdbcType=VARCHAR}
+        ORDER BY pi.project_id,
+        ti.table_info_id
+    </select>
+
+  <select id="selectByUserIdAndTableInfoId" resultMap="DOResultMap" >
+    SELECT a.column_info_id,b.end_date,a.table_info_id,coalesce(c.table_name,'UNKNOWN'),c.project_id,coalesce(d.project_code,'UNKNOWN')
+    FROM apply_detail a
+    INNER JOIN apply_form b ON a.apply_form_id = b.apply_form_id
+      AND b.table_info_id = #{tableInfoId,jdbcType=BIGINT}
+      AND b.apply_user_id = #{userId,jdbcType=VARCHAR}
+    INNER JOIN table_info c ON b.table_info_id = c.table_info_id
+    INNER JOIN project_info d ON c.project_id = d.project_id
+    WHERE b.status_code in
+      <foreach collection="statusCodeList" open="(" close=")" separator="," item="item" index="index">
+          #{item}
+      </foreach>
+    ORDER BY c.project_id, a.table_info_id, a.column_info_id
+  </select>
+
+</mapper>

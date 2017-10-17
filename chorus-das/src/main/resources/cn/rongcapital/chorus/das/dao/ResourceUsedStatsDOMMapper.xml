@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.rongcapital.chorus.das.dao.ResourceUsedStatsDOMMapper">
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.ResourceUsedStats">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="policy_id" jdbcType="VARCHAR" property="policyId" />
+    <result column="resource_name" jdbcType="VARCHAR" property="resourceName" />
+    <result column="service_name" jdbcType="VARCHAR" property="serviceName" />
+    <result column="resource_type" jdbcType="VARCHAR" property="resourceType" />
+    <result column="used_count" jdbcType="BIGINT" property="usedCount" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, policy_id, resource_name, service_name, resource_type, used_count, update_time
+  </sql>
+  <select id="statsTableUsedTopN" resultMap="BaseResultMap">
+    select 
+    resource_name, sum(used_count) as used_count
+    <choose>
+      <when test="projectId != null and projectId != ''">
+        from resource_used_stats t1, authorization_detail t2
+        where t1.policy_id=t2.policy_id
+        and t2.project_id=#{projectId}
+      </when>
+      <otherwise>
+        from resource_used_stats t1
+        where 1=1
+      </otherwise>
+    </choose>
+
+    <if test="rTypes != null">
+      and t1.resource_type in
+      <foreach collection="rTypes" item="rType" separator="," open="("  close=")">
+        #{rType, jdbcType=VARCHAR}
+      </foreach>
+    </if>
+    group by resource_name
+    order by 2 desc
+    limit #{topN}
+  </select>
+
+  <insert id="batchInsert" parameterType="java.util.List">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into resource_used_stats (policy_id, resource_name, service_name,
+      resource_type, used_count, update_time
+      )
+    values 
+    <foreach collection="records" item="record" index="index" separator=",">
+      (#{record.policyId,jdbcType=VARCHAR}, #{record.resourceName,jdbcType=VARCHAR}, #{record.serviceName,jdbcType=VARCHAR},
+      #{record.resourceType,jdbcType=VARCHAR}, #{record.usedCount,jdbcType=BIGINT}, #{record.updateTime,jdbcType=TIMESTAMP}
+      )
+    </foreach>
+
+  </insert>
+
+  <delete id="deleteAll">
+    delete from resource_used_stats;
+  </delete>
+</mapper>

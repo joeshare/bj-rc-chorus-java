@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.chorus.das.dao.InstanceEnvironmentMappingMapper" >
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.InstanceEnvironmentMapping" >
+    <id column="instance_environment_id" property="instanceEnvironmentId" jdbcType="BIGINT" />
+    <result column="instance_id" property="instanceId" jdbcType="BIGINT" />
+    <result column="environment_id" property="environmentId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    instance_environment_id, instance_id, environment_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from instance_environment_mapping
+    where instance_environment_id = #{instanceEnvironmentId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from instance_environment_mapping
+    where instance_environment_id = #{instanceEnvironmentId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.rongcapital.chorus.das.entity.InstanceEnvironmentMapping" >
+    insert into instance_environment_mapping (instance_environment_id, instance_id, 
+      environment_id)
+    values (#{instanceEnvironmentId,jdbcType=BIGINT}, #{instanceId,jdbcType=BIGINT}, 
+      #{environmentId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.rongcapital.chorus.das.entity.InstanceEnvironmentMapping" >
+    insert into instance_environment_mapping
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="instanceEnvironmentId != null" >
+        instance_environment_id,
+      </if>
+      <if test="instanceId != null" >
+        instance_id,
+      </if>
+      <if test="environmentId != null" >
+        environment_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="instanceEnvironmentId != null" >
+        #{instanceEnvironmentId,jdbcType=BIGINT},
+      </if>
+      <if test="instanceId != null" >
+        #{instanceId,jdbcType=BIGINT},
+      </if>
+      <if test="environmentId != null" >
+        #{environmentId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.rongcapital.chorus.das.entity.InstanceEnvironmentMapping" >
+    update instance_environment_mapping
+    <set >
+      <if test="instanceId != null" >
+        instance_id = #{instanceId,jdbcType=BIGINT},
+      </if>
+      <if test="environmentId != null" >
+        environment_id = #{environmentId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where instance_environment_id = #{instanceEnvironmentId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.rongcapital.chorus.das.entity.InstanceEnvironmentMapping" >
+    update instance_environment_mapping
+    set instance_id = #{instanceId,jdbcType=BIGINT},
+      environment_id = #{environmentId,jdbcType=BIGINT}
+    where instance_environment_id = #{instanceEnvironmentId,jdbcType=BIGINT}
+  </update>
+</mapper>

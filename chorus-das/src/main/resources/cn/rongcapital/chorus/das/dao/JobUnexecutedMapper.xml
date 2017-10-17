@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.rongcapital.chorus.das.dao.JobUnexecutedMapper">
+
+	<select id="selectWaitExecuteJobs" resultType="cn.rongcapital.chorus.das.entity.UnexecutedJob">
+		select 
+		date_format(job_unexecuted.sche_exec_time, '%Y-%m-%d %H:%i:%s') as scheExecTime,
+		job.job_alias_name as jobName,
+		project_info.project_name as projectName,
+		job.create_user_name as createUserName ,
+		job.description
+		from job_unexecuted 
+		left join job on job_unexecuted.job_name = job.job_name 
+		left join project_info on job.project_id = project_info.project_id
+		where job_unexecuted.rerun_flag = 0 and job_unexecuted.`status` = 0
+		order by scheExecTime desc
+		<if test="top !=null "> 
+		  limit #{top}
+		  <if test="size !=null "> 
+          ,#{size}
+          </if>
+		</if>
+	</select>
+	
+	<select id="selectWaitExecuteJobsCount" resultType="int">
+        select 
+        count(1) from job_unexecuted
+        where rerun_flag = 0 and `status` = 0
+    </select>
+    
+    <select id="selectJobUnexecuted" resultType="cn.rongcapital.chorus.das.entity.JobUnexecutedDO">
+        select 
+		id,job_name as jobName,date_format(sche_exec_time, '%Y-%m-%d %H:%i:%s') as scheExecTime,rerun_flag as rerunFlag,
+		notice_flag as noticeFlag,`status`,date_format(exec_time, '%Y-%m-%d %H:%i:%s') as execTime,
+		create_time,update_time
+		from job_unexecuted
+		<where>
+		   <if test="rerunFlag !=null ">
+		      rerun_flag = #{rerunFlag}
+		   </if>
+		   <if test="status !=null ">
+              and `status` = #{status}
+           </if>
+		</where>
+    </select>
+    
+    <update id="updateWaitExecuteJobStatus">
+	    update job_unexecuted set `status` = 1, exec_time = now()
+	    where job_name=#{jobName, jdbcType=VARCHAR}
+	</update>
+	
+	<insert id="insert" parameterType="cn.rongcapital.chorus.das.entity.JobUnexecutedDO">
+	    insert into job_unexecuted(job_name,sche_exec_time,rerun_flag,notice_flag)
+	    values (#{jobName},#{scheExecTime},#{rerunFlag},#{noticeFlag})
+	</insert>
+
+</mapper>

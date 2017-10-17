@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.chorus.das.dao.v2.ApplyFormDOMapperV2">
+    <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.ApplyFormDOV2">
+        <id column="apply_form_id" property="applyFormId" jdbcType="BIGINT"/>
+        <result column="table_info_id" property="tableInfoId" jdbcType="VARCHAR"/>
+        <!-- table_info removed -->
+        <result column="table_name" property="tableName" jdbcType="VARCHAR"/>
+        <!-- table_info removed -->
+        <result column="apply_user_id" property="applyUserId" jdbcType="VARCHAR"/>
+        <result column="apply_name" property="applyUserName" jdbcType="VARCHAR"/>
+        <result column="apply_time" property="applyTime" jdbcType="TIMESTAMP"/>
+        <result column="reason" property="reason" jdbcType="VARCHAR"/>
+        <result column="deal_user_id" property="dealUserId" jdbcType="VARCHAR"/>
+        <result column="deal_instruction" property="dealInstruction" jdbcType="VARCHAR"/>
+        <result column="deal_name" property="dealUserName" jdbcType="VARCHAR"/>
+        <result column="deal_time" property="dealTime" jdbcType="TIMESTAMP"/>
+        <result column="end_date" property="endDate" jdbcType="TIMESTAMP"/>
+        <result column="status_code" property="statusCode" jdbcType="VARCHAR"/>
+        <result column="project_name" property="projectName" jdbcType="VARCHAR"/>
+        <result column="apply_user_name" jdbcType="VARCHAR" property="applyUserName" />
+    </resultMap>
+
+    <select id="selectAllForm" resultMap="BaseResultMap">
+			SELECT
+				t1.apply_form_id,
+				t1.table_info_id,
+				t1.table_name,
+				t1.apply_user_id,
+				t1.apply_time,
+				t1.reason,
+				t1.deal_user_id,
+				t1.deal_instruction,
+				t1.deal_time,
+				t1.end_date,
+				t1.apply_user_name,
+				cs.status_name AS status_code,
+                pi.project_name
+			FROM
+				apply_form_v2 t1
+            INNER JOIN project_info pi on pi.project_id = t1.project_id
+			INNER JOIN common_status cs ON cs.status_code = t1.status_code
+			WHERE
+				t1.apply_user_id = #{userId,jdbcType=VARCHAR}
+			ORDER BY
+				t1.apply_time DESC
+    </select>
+
+    <select id="selectForm" resultMap="BaseResultMap">
+        SELECT ta.apply_form_id,
+            ta.table_info_id,
+            ta.table_name,
+            ta.apply_user_id,
+            ta.apply_time,
+            ta.reason,
+            ta.deal_user_id,
+            ta.deal_instruction,
+            ta.deal_time,
+            ta.end_date,
+            cs.status_name AS status_code,
+            pi.project_name,
+            ta.apply_user_name
+        FROM apply_form_v2 ta
+        INNER JOIN project_member_mapping pmm ON pmm.user_id = #{userId, jdbcType=VARCHAR} AND ta.project_id = pmm.project_id
+        INNER JOIN t_role r ON r.role_code in ('914', '915') AND r.role_id = pmm.role_id
+        INNER JOIN project_info pi on pi.project_id = pmm.project_id
+        INNER JOIN common_status cs ON cs.status_code = ta.status_code
+        WHERE
+        <choose>
+            <when test="approved">
+                ta.status_code in ('1502', '1503')
+                ORDER BY ta.deal_time DESC
+            </when>
+            <otherwise>
+                ta.status_code = '1501'
+                ORDER BY ta.apply_time DESC
+            </otherwise>
+        </choose>
+    </select>
+
+  <update id="approve" parameterType="cn.rongcapital.chorus.das.entity.ApplyForm">
+    UPDATE apply_form_v2
+    <set>
+      <if test="tableInfoId != null">
+        table_info_id = #{tableInfoId,jdbcType=BIGINT},
+      </if>
+      <if test="endDate != null">
+        end_date = #{endDate,jdbcType=DATE},
+      </if>
+      <if test="applyUserId != null">
+        apply_user_id = #{applyUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyTime != null">
+        apply_time = #{applyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reason != null">
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="dealUserId != null">
+        deal_user_id = #{dealUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="dealInstruction != null">
+        deal_instruction = #{dealInstruction,jdbcType=VARCHAR},
+      </if>
+      <if test="dealTime != null">
+        deal_time = #{dealTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusCode != null">
+        status_code = #{statusCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where apply_form_id = #{applyFormId,jdbcType=BIGINT}
+    and table_info_id = #{tableInfoId}
+    AND apply_user_id = #{applyUserId}
+  </update>
+
+</mapper>

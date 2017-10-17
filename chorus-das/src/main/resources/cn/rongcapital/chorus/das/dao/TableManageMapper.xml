@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.chorus.das.dao.TableManageMapper" >
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.TableInfo" >
+    <id column="table_info_id" property="tableInfoId" jdbcType="BIGINT" />
+    <result column="project_id" property="projectId" jdbcType="BIGINT" />
+    <result column="table_code" property="tableCode" jdbcType="VARCHAR" />
+    <result column="table_name" property="tableName" jdbcType="VARCHAR" />
+    <result column="data_field" property="dataField" jdbcType="VARCHAR" />
+    <result column="table_type" property="tableType" jdbcType="VARCHAR" />
+    <result column="is_snapshot" property="isSnapshot" jdbcType="VARCHAR" />
+    <result column="update_frequence" property="updateFrequence" jdbcType="VARCHAR" />
+    <result column="sla" property="sla" jdbcType="VARCHAR" />
+    <result column="security_level" property="securityLevel" jdbcType="VARCHAR" />
+    <result column="is_open" property="isOpen" jdbcType="TINYINT" />
+    <result column="table_des" property="tableDes" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status_code" property="statusCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="CommonMap" type="cn.rongcapital.chorus.das.entity.TableInfoDO" >
+    <id column="table_info_id" property="tableInfoId" jdbcType="BIGINT" />
+    <result column="project_id" property="projectId" jdbcType="BIGINT" />
+    <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+    <result column="project_code" property="projectCode" jdbcType="VARCHAR" />
+    <result column="table_name" property="tableName" jdbcType="VARCHAR" />
+    <result column="security_level" property="securityLevel" jdbcType="VARCHAR" />
+    <result column="table_des" property="tableDes" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="TablesMap" type="cn.rongcapital.chorus.das.entity.TableListDO" >
+    <result column="project_code" property="projectCode" jdbcType="VARCHAR" />
+    <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+    <result column="table_name" property="tableName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    table_info_id, project_id, table_code, table_name, data_field, table_type, is_snapshot, 
+    update_frequence, sla, security_level, is_open, table_des, create_time, update_time, 
+    status_code
+  </sql>
+  <select id="selectByProjectID" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from table_info
+    where project_id = #{projectId,jdbcType=BIGINT}
+  </select>
+  <select id="selectByTableName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from table_info
+    where instr(table_name,#{tableName,jdbcType=VARCHAR})>0
+  </select>
+  <select id="selectByFuzzyName" resultMap="CommonMap" parameterType="java.lang.String" >
+    select t.table_info_id,t.table_name,t.security_level,t.table_des,t.project_id,p.project_name,p.project_code
+    from
+    (select *
+    from table_info
+    where instr(table_name,#{tabColName,jdbcType=VARCHAR})>0
+    or table_info_id in
+    (select table_info_id from column_info where instr(column_name,#{tabColName,jdbcType=VARCHAR})>0)
+    ) t left join project_info p
+    on t.project_id=p.project_id
+  </select>
+  <select id="selectAllTable" resultMap="CommonMap" parameterType="java.lang.String" >
+    select t.table_info_id,t.table_name,t.security_level,t.table_des,t.project_id,p.project_name,p.project_code
+    from table_info t
+    left join project_info p
+    on t.project_id=p.project_id
+  </select>
+  <select id="selectTableList" resultMap="CommonMap" parameterType="java.lang.Long" >
+    select t.table_info_id,t.table_name,t.security_level,t.table_des,t.project_id,p.project_name,p.project_code
+    from table_info t
+    join project_info p
+    on t.project_id=p.project_id
+    where t.project_id = #{projectId,jdbcType=BIGINT}
+  </select>
+  <select id="selectTableName" resultType="java.lang.String" parameterType="java.lang.Long" >
+    select table_name
+    from table_info
+    where project_id = #{projectId,jdbcType=BIGINT}
+  </select>
+</mapper>

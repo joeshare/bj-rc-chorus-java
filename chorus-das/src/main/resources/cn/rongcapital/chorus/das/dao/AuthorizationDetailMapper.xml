@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.rongcapital.chorus.das.dao.AuthorizationDetailMapper">
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.AuthorizationDetail">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="policy_id" jdbcType="VARCHAR" property="policyId" />
+    <result column="policy_name" jdbcType="VARCHAR" property="policyName" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="project_id" jdbcType="BIGINT" property="projectId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="category" jdbcType="VARCHAR" property="category" />
+    <result column="enabled" jdbcType="TINYINT" property="enabled" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, policy_id, policy_name, user_id, project_id, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from authorization_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from authorization_detail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.rongcapital.chorus.das.entity.AuthorizationDetail">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into authorization_detail (policy_id, policy_name, user_id, 
+      project_id, create_time,category,enabled)
+    values (#{policyId,jdbcType=INTEGER}, #{policyName,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
+      #{projectId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP},#{category,jdbcType=VARCHAR},#{enabled,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.rongcapital.chorus.das.entity.AuthorizationDetail">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into authorization_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="policyId != null">
+        policy_id,
+      </if>
+      <if test="policyName != null">
+        policy_name,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="projectId != null">
+        project_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="category != null">
+        category,
+      </if>
+      <if test="enabled != null">
+        enabled,
+      </if>
+
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="policyId != null">
+        #{policyId,jdbcType=INTEGER},
+      </if>
+      <if test="policyName != null">
+        #{policyName,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="projectId != null">
+        #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="category != null">
+        #{category,jdbcType=VARCHAR},
+      </if>
+      <if test="enabled != null">
+        #{enabled,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.rongcapital.chorus.das.entity.AuthorizationDetail">
+    update authorization_detail
+    <set>
+      <if test="policyId != null">
+        policy_id = #{policyId,jdbcType=INTEGER},
+      </if>
+      <if test="policyName != null">
+        policy_name = #{policyName,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="projectId != null">
+        project_id = #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.rongcapital.chorus.das.entity.AuthorizationDetail">
+    update authorization_detail
+    set policy_id = #{policyId,jdbcType=INTEGER},
+      policy_name = #{policyName,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      project_id = #{projectId,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

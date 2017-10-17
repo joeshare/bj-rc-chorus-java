@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.chorus.das.dao.ResourceUsageDOMapper" >
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.ResourceUsage" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="usage_code" property="usageCode" jdbcType="VARCHAR" />
+    <result column="usage_name" property="usageName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, usage_code, usage_name
+  </sql>
+  <select id="selectResourceUsages" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from resource_usage
+  </select>
+</mapper>

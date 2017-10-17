@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.chorus.das.dao.CommonStatusMapper" >
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.CommonStatus" >
+    <id column="status_id" property="statusId" jdbcType="BIGINT" />
+    <result column="status_code" property="statusCode" jdbcType="VARCHAR" />
+    <result column="status_name" property="statusName" jdbcType="VARCHAR" />
+    <result column="status_type" property="statusType" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    status_id, status_code, status_name, status_type
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from common_status
+    where status_id = #{statusId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from common_status
+    where status_id = #{statusId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.rongcapital.chorus.das.entity.CommonStatus" >
+    insert into common_status (status_id, status_code, status_name, 
+      status_type)
+    values (#{statusId,jdbcType=BIGINT}, #{statusCode,jdbcType=VARCHAR}, #{statusName,jdbcType=VARCHAR}, 
+      #{statusType,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.rongcapital.chorus.das.entity.CommonStatus" >
+    insert into common_status
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="statusId != null" >
+        status_id,
+      </if>
+      <if test="statusCode != null" >
+        status_code,
+      </if>
+      <if test="statusName != null" >
+        status_name,
+      </if>
+      <if test="statusType != null" >
+        status_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="statusId != null" >
+        #{statusId,jdbcType=BIGINT},
+      </if>
+      <if test="statusCode != null" >
+        #{statusCode,jdbcType=VARCHAR},
+      </if>
+      <if test="statusName != null" >
+        #{statusName,jdbcType=VARCHAR},
+      </if>
+      <if test="statusType != null" >
+        #{statusType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.rongcapital.chorus.das.entity.CommonStatus" >
+    update common_status
+    <set >
+      <if test="statusCode != null" >
+        status_code = #{statusCode,jdbcType=VARCHAR},
+      </if>
+      <if test="statusName != null" >
+        status_name = #{statusName,jdbcType=VARCHAR},
+      </if>
+      <if test="statusType != null" >
+        status_type = #{statusType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where status_id = #{statusId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.rongcapital.chorus.das.entity.CommonStatus" >
+    update common_status
+    set status_code = #{statusCode,jdbcType=VARCHAR},
+      status_name = #{statusName,jdbcType=VARCHAR},
+      status_type = #{statusType,jdbcType=VARCHAR}
+    where status_id = #{statusId,jdbcType=BIGINT}
+  </update>
+</mapper>

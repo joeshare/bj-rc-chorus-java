@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.chorus.das.dao.TableAuthorityMapper" >
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.TableAuthority" >
+    <id column="table_authority_id" property="tableAuthorityId" jdbcType="BIGINT" />
+    <result column="table_info_id" property="tableInfoId" jdbcType="BIGINT" />
+    <result column="column_info_id" property="columnInfoId" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="end_date" property="endDate" jdbcType="DATE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    table_authority_id, table_info_id, column_info_id, user_id, end_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from table_authority
+    where table_authority_id = #{tableAuthorityId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from table_authority
+    where table_authority_id = #{tableAuthorityId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.rongcapital.chorus.das.entity.TableAuthority" >
+    insert into table_authority (table_authority_id, table_info_id, column_info_id,
+      user_id, end_date)
+    values (#{tableAuthorityId,jdbcType=BIGINT}, #{tableInfoId,jdbcType=BIGINT}, #{columnInfoId,jdbcType=BIGINT},
+      #{userId,jdbcType=VARCHAR}, #{endDate,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.rongcapital.chorus.das.entity.TableAuthority" >
+    insert into table_authority
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tableAuthorityId != null" >
+        table_authority_id,
+      </if>
+      <if test="tableInfoId != null" >
+        table_info_id,
+      </if>
+      <if test="columnInfoId != null" >
+        column_info_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="endDate != null" >
+        end_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tableAuthorityId != null" >
+        #{tableAuthorityId,jdbcType=BIGINT},
+      </if>
+      <if test="tableInfoId != null" >
+        #{tableInfoId,jdbcType=BIGINT},
+      </if>
+      <if test="columnInfoId != null" >
+        #{columnInfoId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.rongcapital.chorus.das.entity.TableAuthority" >
+    update table_authority
+    <set >
+      <if test="tableInfoId != null" >
+        table_info_id = #{tableInfoId,jdbcType=BIGINT},
+      </if>
+      <if test="columnInfoId != null" >
+        column_info_id = #{columnInfoId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="endDate != null" >
+        end_date = #{endDate,jdbcType=DATE},
+      </if>
+    </set>
+    where table_authority_id = #{tableAuthorityId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.rongcapital.chorus.das.entity.TableAuthority" >
+    update table_authority
+    set table_info_id = #{tableInfoId,jdbcType=BIGINT},
+      column_info_id = #{columnInfoId,jdbcType=BIGINT},
+      user_id = #{userId,jdbcType=VARCHAR},
+      end_date = #{endDate,jdbcType=DATE}
+    where table_authority_id = #{tableAuthorityId,jdbcType=BIGINT}
+  </update>
+</mapper>

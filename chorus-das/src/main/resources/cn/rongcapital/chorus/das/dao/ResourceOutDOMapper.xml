@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.chorus.das.dao.ResourceOutDOMapper">
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.ResourceOut">
+    <id column="resource_out_id" property="resourceOutId" jdbcType="BIGINT"/>
+    <result column="project_id" property="projectId" jdbcType="BIGINT"/>
+    <result column="resource_name" property="resourceName" jdbcType="VARCHAR"/>
+    <result column="resource_source" property="resourceSource" jdbcType="VARCHAR"/>
+    <result column="resource_usage" property="resourceUsage" jdbcType="VARCHAR"/>
+    <result column="resource_desc" property="resourceDesc" jdbcType="VARCHAR"/>
+    <result column="storage_type" property="storageType" jdbcType="VARCHAR"/>
+    <result column="conn_url" property="connUrl" jdbcType="VARCHAR"/>
+    <result column="conn_port" property="connPort" jdbcType="VARCHAR"/>
+    <result column="conn_user" property="connUser" jdbcType="VARCHAR"/>
+    <result column="conn_pass" property="connPass" jdbcType="VARCHAR"/>
+    <result column="create_user_id" property="createUserId" jdbcType="VARCHAR"/>
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    <result column="update_user_id" property="updateUserId" jdbcType="VARCHAR"/>
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    <result column="end_date" property="endDate" jdbcType="DATE"/>
+    <result column="status_code" property="statusCode" jdbcType="VARCHAR"/>
+    <result column="database_name" property="databaseName" jdbcType="VARCHAR"/>
+    <result column="conn_host" jdbcType="VARCHAR" property="connHost" />
+    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+    <result column="guid" jdbcType="VARCHAR" property="guid" />
+    <result column="path" jdbcType="VARCHAR" property="path" />
+    <result column="connect_mode" jdbcType="VARCHAR" property="connectMode" />
+  </resultMap>
+  <resultMap id="BaseResultMap2" type="cn.rongcapital.chorus.das.entity.ResourceOutDO">
+    <id column="resource_out_id" property="resourceOutId" jdbcType="BIGINT"/>
+    <result column="project_id" property="projectId" jdbcType="BIGINT"/>
+    <result column="resource_name" property="resourceName" jdbcType="VARCHAR"/>
+    <result column="resource_source" property="resourceSource" jdbcType="VARCHAR"/>
+    <result column="resource_usage" property="resourceUsage" jdbcType="VARCHAR"/>
+    <result column="resource_desc" property="resourceDesc" jdbcType="VARCHAR"/>
+    <result column="storage_type" property="storageType" jdbcType="VARCHAR"/>
+    <result column="conn_url" property="connUrl" jdbcType="VARCHAR"/>
+    <result column="conn_port" property="connPort" jdbcType="VARCHAR"/>
+    <result column="conn_user" property="connUser" jdbcType="VARCHAR"/>
+    <result column="conn_pass" property="connPass" jdbcType="VARCHAR"/>
+    <result column="create_user_id" property="createUserId" jdbcType="VARCHAR"/>
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    <result column="update_user_id" property="updateUserId" jdbcType="VARCHAR"/>
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    <result column="end_date" property="endDate" jdbcType="DATE"/>
+    <result column="status_code" property="statusCode" jdbcType="VARCHAR"/>
+    <result column="database_name" property="databaseName" jdbcType="VARCHAR"/>
+    <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+    <result column="usage_name" property="usageName" jdbcType="VARCHAR"/>
+    <result column="type_name" property="typeName" jdbcType="VARCHAR"/>
+    <result column="conn_host" jdbcType="VARCHAR" property="connHost" />
+    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+    <result column="guid" jdbcType="VARCHAR" property="guid" />
+    <result column="path" jdbcType="VARCHAR" property="path" />
+    <result column="connect_mode" jdbcType="VARCHAR" property="connectMode" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    resource_out_id, project_id, resource_name, resource_source, resource_usage, resource_desc, 
+    storage_type, conn_url, conn_port, conn_user, conn_pass, create_user_id, create_time, 
+    update_user_id, update_time, end_date, status_code, database_name, conn_host, create_user_name, path, connect_mode
+  </sql>
+  <!-- 根据项目 id 查询该项目下所有的外部资源信息 -->
+  <select id="selectResourceOutByProjectId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from resource_out
+    where project_id = #{projectId} and storage_type = #{type}
+  </select>
+  <select id="selectResourceOutDOByProjectId" resultMap="BaseResultMap2">
+    SELECT
+      ro.resource_out_id ,
+      ro.project_id ,
+      ro.resource_name ,
+      ro.resource_source ,
+      ro.resource_usage ,
+      ro.resource_desc ,
+      ro.storage_type ,
+      ro.conn_url ,
+      ro.conn_port ,
+      ro.conn_user ,
+      ro.conn_pass ,
+      ro.create_user_id ,
+      ro.create_time ,
+      ro.update_user_id ,
+      ro.update_time ,
+      ro.end_date ,
+      ro.status_code ,
+      ro.database_name ,
+      ro.conn_host,
+      ro.create_user_name,
+      ro.guid,
+      ru.usage_name ,
+      rt.type_name
+    FROM
+      resource_out ro
+    LEFT JOIN resource_usage ru ON ro.resource_usage = ru.id
+    LEFT JOIN resource_type rt ON ro.storage_type = rt.id
+    WHERE project_id = #{projectId}
+  </select>
+  <!-- 根据条件查询资源列表 -->
+  <select id="selectResourceOutByCondition" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM resource_out
+    WHERE
+    <choose>
+      <when test="isAccurate">
+        <if test="resourceName != null">
+          resource_name LIKE CONCAT ('%', #{resourceName}, '%') AND
+        </if>
+        <if test="storageType != null">
+          storage_type LIKE CONCAT ('%', #{storageType}, '%') AND
+        </if>
+        <if test="resourceUsage != null">
+          resource_usage LIKE CONCAT ('%', #{resourceUsage}, '%') AND
+        </if>
+        <if test="createUserId != null">
+          create_user_id LIKE CONCAT ('%', #{createUserId}, '%') AND
+        </if>
+      </when>
+      <otherwise>
+        <if test="resourceName != null">
+          resource_name = #{resourceName} AND
+        </if>
+        <if test="storageType != null">
+          storage_type = #{storageType} AND
+        </if>
+        <if test="resourceUsage != null">
+          resource_usage = #{resourceUsage} AND
+        </if>
+        <if test="createUserId != null">
+          create_user_id = #{createUserId} AND
+        </if>
+      </otherwise>
+    </choose>
+    project_id = #{projectId}
+  </select>
+  <!-- 根据项目 ID 删除所有该项目下的外部资源 -->
+  <delete id="deleteByProjectId" parameterType="java.lang.Long">
+    delete from resource_out
+    where project_id = #{projectId,jdbcType=BIGINT}
+  </delete>
+
+  <!-- 根据项目 id 查询该项目下所有的外部资源信息 -->
+  <select id="selectAllResourceOutByProjectId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from resource_out
+    where project_id = #{projectId}
+  </select>
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.rongcapital.chorus.das.dao.CommonInfoMapper">
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.CommonInfoDO">
+      <id column="id" property="id" jdbcType="INTEGER"/>
+      <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+      <result column="attribute_id" property="attributeId" jdbcType="VARCHAR"/>
+      <result column="value" property="value" jdbcType="VARCHAR"/>
+      <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+      <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, attribute_id, value, create_time, update_time
+  </sql>
+  
+  <insert id="insert" parameterType="cn.rongcapital.chorus.das.entity.CommonInfoDO">
+    insert into common_info(user_id,attribute_id,value) 
+    values (#{userId,jdbcType=VARCHAR}, #{attributeId,jdbcType=VARCHAR}, #{value,jdbcType=VARCHAR})
+  </insert>
+  
+  <update id="update" parameterType="cn.rongcapital.chorus.das.entity.CommonInfoDO">
+    update common_info set value = #{value,jdbcType=VARCHAR} where user_id = #{userId,jdbcType=VARCHAR} and attribute_id = #{attributeId,jdbcType=VARCHAR} 
+  </update>
+  
+  <delete id="delete" parameterType="cn.rongcapital.chorus.das.entity.CommonInfoDO">
+    delete * from  common_info where user_id = #{userId,jdbcType=VARCHAR} and attribute_id = #{attributeId,jdbcType=VARCHAR} 
+  </delete>
+  
+  <select id="selectByUserIdAndAttrId" resultMap="BaseResultMap">
+    select * from common_info where user_id = #{userId,jdbcType=VARCHAR} and attribute_id = #{attributeId,jdbcType=VARCHAR} 
+  </select>
+</mapper>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:hdp="http://www.springframework.org/schema/hadoop"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:batch="http://www.springframework.org/schema/batch"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/hadoop
+		http://www.springframework.org/schema/hadoop/spring-hadoop.xsd
+		http://www.springframework.org/schema/batch
+		http://www.springframework.org/schema/batch/spring-batch.xsd
+		http://www.springframework.org/schema/util
+		http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<batch:job id="rangerAuditStats">
+		<batch:step id="step1">
+			<batch:tasklet ref="rangerAuditStatsTasklet" />
+		</batch:step>
+		<batch:listeners>
+			<batch:listener ref="logListener"></batch:listener>
+		</batch:listeners>
+	</batch:job>
+	<bean id="logListener" class="cn.rongcapital.log.JobListenerForLog"></bean>
+	<bean id="rangerAuditStatsTasklet" class="cn.rongcapital.chorus.modules.ranger.audit.stats.RangerAuditStatsTasklet">
+		<property name="days" >
+            <value>${days}</value>
+		</property>
+		<property name="repos">
+			<value>${repos}</value>
+		</property>
+		<property name="dbURL">
+			<value>${dbURL}</value>
+		</property>
+		<property name="userName">
+			<value>${userName}</value>
+		</property>
+		<property name="password">
+			<value>${password}</value>
+		</property>
+		<property name="zkHosts">
+			<value>${zkHosts}</value>
+		</property>
+		<property name="collectionName">
+			<value>${collectionName}</value>
+		</property>
+		<!--<property name="solrURL">-->
+			<!--<value >${solrURL}</value>-->
+		<!--</property>-->
+	</bean>
+</beans>

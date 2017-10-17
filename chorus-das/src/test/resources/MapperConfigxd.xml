@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC">
+            </transactionManager>
+            <dataSource type="POOLED">
+                <!---->
+                <!--<property name="driver" value="org.h2.Driver" />-->
+                <!--<property name="url" value="jdbc:h2:mem:chorus;MODE=MySQL;DB_CLOSE_DELAY=-1" />-->
+                <!--<property name="username" value="sa" />-->
+
+                <property name="driver" value="com.mysql.jdbc.Driver" />
+                <property name="url" value="jdbc:mysql://10.200.48.79:3306/xd" />
+                <property name="username" value="dps" />
+                <property name="password" value="Dps@10.200.48.MySQL" />
+
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <package name="cn.rongcapital.chorus.das.xd.dao"/>
+    </mappers>
+</configuration>

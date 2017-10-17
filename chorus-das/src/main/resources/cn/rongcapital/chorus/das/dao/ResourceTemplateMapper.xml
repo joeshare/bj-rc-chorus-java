@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.chorus.das.dao.ResourceTemplateMapper" >
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.ResourceTemplate" >
+    <id column="resource_template_id" property="resourceTemplateId" jdbcType="BIGINT" />
+    <result column="resource_name" property="resourceName" jdbcType="VARCHAR" />
+    <result column="resource_cpu" property="resourceCpu" jdbcType="INTEGER" />
+    <result column="resource_memory" property="resourceMemory" jdbcType="INTEGER" />
+    <result column="resource_storage" property="resourceStorage" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status_code" property="statusCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    resource_template_id, resource_name, resource_cpu, resource_memory, resource_storage, 
+    create_time, update_time, status_code
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from resource_template
+    where resource_template_id = #{resourceTemplateId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from resource_template
+    where resource_template_id = #{resourceTemplateId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.rongcapital.chorus.das.entity.ResourceTemplate" >
+    insert into resource_template (resource_template_id, resource_name, 
+      resource_cpu, resource_memory, resource_storage, 
+      create_time, update_time, status_code
+      )
+    values (#{resourceTemplateId,jdbcType=BIGINT}, #{resourceName,jdbcType=VARCHAR}, 
+      #{resourceCpu,jdbcType=INTEGER}, #{resourceMemory,jdbcType=INTEGER}, #{resourceStorage,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{statusCode,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.rongcapital.chorus.das.entity.ResourceTemplate" >
+    insert into resource_template
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="resourceTemplateId != null" >
+        resource_template_id,
+      </if>
+      <if test="resourceName != null" >
+        resource_name,
+      </if>
+      <if test="resourceCpu != null" >
+        resource_cpu,
+      </if>
+      <if test="resourceMemory != null" >
+        resource_memory,
+      </if>
+      <if test="resourceStorage != null" >
+        resource_storage,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="statusCode != null" >
+        status_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="resourceTemplateId != null" >
+        #{resourceTemplateId,jdbcType=BIGINT},
+      </if>
+      <if test="resourceName != null" >
+        #{resourceName,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceCpu != null" >
+        #{resourceCpu,jdbcType=INTEGER},
+      </if>
+      <if test="resourceMemory != null" >
+        #{resourceMemory,jdbcType=INTEGER},
+      </if>
+      <if test="resourceStorage != null" >
+        #{resourceStorage,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusCode != null" >
+        #{statusCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.rongcapital.chorus.das.entity.ResourceTemplate" >
+    update resource_template
+    <set >
+      <if test="resourceName != null" >
+        resource_name = #{resourceName,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceCpu != null" >
+        resource_cpu = #{resourceCpu,jdbcType=INTEGER},
+      </if>
+      <if test="resourceMemory != null" >
+        resource_memory = #{resourceMemory,jdbcType=INTEGER},
+      </if>
+      <if test="resourceStorage != null" >
+        resource_storage = #{resourceStorage,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusCode != null" >
+        status_code = #{statusCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where resource_template_id = #{resourceTemplateId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.rongcapital.chorus.das.entity.ResourceTemplate" >
+    update resource_template
+    set resource_name = #{resourceName,jdbcType=VARCHAR},
+      resource_cpu = #{resourceCpu,jdbcType=INTEGER},
+      resource_memory = #{resourceMemory,jdbcType=INTEGER},
+      resource_storage = #{resourceStorage,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status_code = #{statusCode,jdbcType=VARCHAR}
+    where resource_template_id = #{resourceTemplateId,jdbcType=BIGINT}
+  </update>
+</mapper>

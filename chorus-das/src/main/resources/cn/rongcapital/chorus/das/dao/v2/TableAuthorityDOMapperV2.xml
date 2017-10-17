@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.chorus.das.dao.v2.TableAuthorityDOMapperV2" >
+  <resultMap id="DOResultMap" type="cn.rongcapital.chorus.das.entity.TableAuthorityDOV2" >
+    <result column="project_id" property="projectId" jdbcType="BIGINT" />
+    <result column="project_code" property="projectCode" jdbcType="VARCHAR" />
+    <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+    <result column="table_info_id" property="tableInfoId" jdbcType="VARCHAR" />
+    <result column="table_name" property="tableName" jdbcType="VARCHAR" />
+    <result column="column_info_id" property="columnInfoId" jdbcType="VARCHAR" />
+    <result column="column_name" property="columnName" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="end_date" property="endDate" jdbcType="DATE" />
+  </resultMap>
+    <resultMap id="WithTableDOResultMap" type="cn.rongcapital.chorus.das.entity.TableAuthorityWithTableDOV2" >
+        <result column="project_id" property="projectId" jdbcType="BIGINT" />
+        <result column="project_code" property="projectCode" jdbcType="VARCHAR" />
+        <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+        <result column="table_info_id" property="tableInfoId" jdbcType="VARCHAR" />
+        <result column="table_name" property="tableName" jdbcType="VARCHAR" />
+        <result column="user_id" property="userId" jdbcType="VARCHAR" />
+        <result column="end_date" property="endDate" jdbcType="DATE" />
+    </resultMap>
+
+    <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.TableAuthorityV2" >
+        <id column="table_authority_id" property="tableAuthorityId" jdbcType="BIGINT" />
+        <result column="project_id" property="projectId" jdbcType="BIGINT" />
+        <result column="table_info_id" property="tableInfoId" jdbcType="VARCHAR" />
+        <result column="table_name" property="tableName" jdbcType="VARCHAR" />
+        <result column="column_info_id" property="columnInfoId" jdbcType="VARCHAR" />
+        <result column="column_name" property="columnName" jdbcType="VARCHAR" />
+        <result column="user_id" property="userId" jdbcType="VARCHAR" />
+        <result column="end_date" property="endDate" jdbcType="DATE" />
+    </resultMap>
+    <resultMap id="SimpleProjectInfo" type="cn.rongcapital.chorus.das.entity.ProjectInfoDO" >
+        <result column="project_id" property="projectId" jdbcType="BIGINT" />
+        <result column="project_code" property="projectCode" jdbcType="VARCHAR" />
+        <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+        <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="selectByAppliedUserId" resultMap="DOResultMap">
+        SELECT pi.project_id, pi.project_code, pi.project_name, ta.table_info_id, ta.table_name
+	        , ta.column_info_id, ta.column_name, ta.user_id
+        FROM table_authority_v2 ta
+        INNER JOIN project_info pi ON pi.project_id = ta.project_id
+        WHERE ta.user_id = #{userId,jdbcType=VARCHAR} and pi.status_code='1205'
+        ORDER BY pi.project_id, ta.table_info_id, ta.column_info_id
+    </select>
+
+    <select id="projectsOfAuthorizedTable" resultMap="SimpleProjectInfo">
+        SELECT DISTINCT pi.project_id, pi.project_code, pi.project_name,  ta.user_id
+        FROM table_authority_v2 ta
+        INNER JOIN project_info pi ON pi.project_id = ta.project_id
+        WHERE ta.user_id = #{userId,jdbcType=VARCHAR} and pi.status_code='1205'
+    </select>
+
+    <select id="tablesOfProjectAndUser" resultMap="DOResultMap">
+        SELECT DISTINCT pi.project_id, ta.table_info_id, ta.table_name
+        FROM table_authority_v2 ta
+        INNER JOIN project_info pi ON pi.project_id = ta.project_id
+        WHERE ta.user_id = #{userId,jdbcType=VARCHAR} and ta.project_id = #{projectId,jdbcType=BIGINT}
+    </select>
+
+    <select id="columnsOfTable" resultMap="DOResultMap">
+        SELECT ta.table_info_id, ta.column_info_id, ta.column_name
+        FROM table_authority_v2 ta
+        INNER JOIN project_info pi ON pi.project_id = ta.project_id
+        WHERE ta.user_id = #{userId,jdbcType=VARCHAR} and ta.table_info_id = #{tableId,jdbcType=BIGINT}
+        and pi.status_code='1205'
+    </select>
+
+    <select id="selectTableByAppliedUserId" resultMap="WithTableDOResultMap">
+        SELECT pi.project_id, pi.project_code, pi.project_name, ta.table_info_id, ta.table_name
+        , ta.user_id,ta.column_name,ta.column_info_id
+        FROM table_authority_v2 ta
+        INNER JOIN project_info pi ON pi.project_id = ta.project_id
+        WHERE ta.user_id = #{userId,jdbcType=VARCHAR}
+        and pi.status_code='1205'
+        ORDER BY pi.project_id, ta.table_info_id, ta.column_info_id
+    </select>
+
+  <select id="selectByUserIdAndTableInfoId" resultMap="DOResultMap" >
+    SELECT a.column_info_id,b.end_date,a.table_info_id,coalesce(b.table_name,'UNKNOWN'),b.project_id,coalesce(d.project_code,'UNKNOWN')
+    FROM apply_detail_v2 a
+    INNER JOIN apply_form_v2 b ON a.apply_form_id = b.apply_form_id
+      AND b.table_info_id = #{tableInfoId,jdbcType=VARCHAR}
+      AND b.apply_user_id = #{userId,jdbcType=VARCHAR}
+    INNER JOIN project_info d ON d.project_id = b.project_id
+    WHERE b.status_code in
+      <foreach collection="statusCodeList" open="(" close=")" separator="," item="item" index="index">
+          #{item}
+      </foreach>
+    ORDER BY d.project_id, a.table_info_id, a.column_info_id
+  </select>
+
+    <select id="selectByUnique" resultMap="BaseResultMap">
+        SELECT ta.table_authority_id,ta.project_id,ta.table_info_id, ta.table_name
+        , ta.column_info_id, ta.column_name, ta.user_id,ta.end_date
+        FROM table_authority_v2 ta
+        WHERE ta.user_id = #{userId,jdbcType=VARCHAR}
+        and ta.column_info_id = #{columnInfoId,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.rongcapital.chorus.das.dao.ProjectResourceKpiSnapshotMapper">
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.ProjectResourceKpiSnapshot">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="project_id" jdbcType="BIGINT" property="projectId" />
+    <result column="project_name" jdbcType="VARCHAR" property="projectName" />
+    <result column="kpi_date" jdbcType="DATE" property="kpiDate" />
+    <result column="cpu_total" jdbcType="INTEGER" property="cpuTotal" />
+    <result column="cpu_used" jdbcType="INTEGER" property="cpuUsed" />
+    <result column="cpu_usage" jdbcType="DOUBLE" property="cpuUsage" />
+    <result column="memory_total" jdbcType="INTEGER" property="memoryTotal" />
+    <result column="memory_used" jdbcType="INTEGER" property="memoryUsed" />
+    <result column="memory_usage" jdbcType="DOUBLE" property="memoryUsage" />
+    <result column="storage_total" jdbcType="BIGINT" property="storageTotal" />
+    <result column="storage_used" jdbcType="BIGINT" property="storageUsed" />
+    <result column="storage_usage" jdbcType="DOUBLE" property="storageUsage" />
+    <result column="data_daily_incr" jdbcType="BIGINT" property="dataDailyIncr" />
+    <result column="task_total" jdbcType="INTEGER" property="taskTotal" />
+    <result column="task_success" jdbcType="INTEGER" property="taskSuccess" />
+    <result column="task_success_rate" jdbcType="DOUBLE" property="taskSuccessRate" />
+    <result column="score" jdbcType="TINYINT" property="score" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, project_id, project_name, kpi_date, cpu_total, cpu_used, cpu_usage, memory_total, 
+    memory_used, memory_usage, storage_total, storage_used, storage_usage, data_daily_incr, 
+    task_total, task_success, task_success_rate, score, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from project_resource_kpi_snapshot
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from project_resource_kpi_snapshot
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.rongcapital.chorus.das.entity.ProjectResourceKpiSnapshot">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into project_resource_kpi_snapshot (project_id, project_name, kpi_date, 
+      cpu_total, cpu_used, cpu_usage, 
+      memory_total, memory_used, memory_usage, 
+      storage_total, storage_used, storage_usage, 
+      data_daily_incr, task_total, task_success, 
+      task_success_rate, score, create_time
+      )
+    values (#{projectId,jdbcType=BIGINT}, #{projectName,jdbcType=VARCHAR}, #{kpiDate,jdbcType=DATE}, 
+      #{cpuTotal,jdbcType=INTEGER}, #{cpuUsed,jdbcType=INTEGER}, #{cpuUsage,jdbcType=DOUBLE}, 
+      #{memoryTotal,jdbcType=INTEGER}, #{memoryUsed,jdbcType=INTEGER}, #{memoryUsage,jdbcType=DOUBLE}, 
+      #{storageTotal,jdbcType=BIGINT}, #{storageUsed,jdbcType=BIGINT}, #{storageUsage,jdbcType=DOUBLE}, 
+      #{dataDailyIncr,jdbcType=BIGINT}, #{taskTotal,jdbcType=INTEGER}, #{taskSuccess,jdbcType=INTEGER}, 
+      #{taskSuccessRate,jdbcType=DOUBLE}, #{score,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.rongcapital.chorus.das.entity.ProjectResourceKpiSnapshot">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into project_resource_kpi_snapshot
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="projectId != null">
+        project_id,
+      </if>
+      <if test="projectName != null">
+        project_name,
+      </if>
+      <if test="kpiDate != null">
+        kpi_date,
+      </if>
+      <if test="cpuTotal != null">
+        cpu_total,
+      </if>
+      <if test="cpuUsed != null">
+        cpu_used,
+      </if>
+      <if test="cpuUsage != null">
+        cpu_usage,
+      </if>
+      <if test="memoryTotal != null">
+        memory_total,
+      </if>
+      <if test="memoryUsed != null">
+        memory_used,
+      </if>
+      <if test="memoryUsage != null">
+        memory_usage,
+      </if>
+      <if test="storageTotal != null">
+        storage_total,
+      </if>
+      <if test="storageUsed != null">
+        storage_used,
+      </if>
+      <if test="storageUsage != null">
+        storage_usage,
+      </if>
+      <if test="dataDailyIncr != null">
+        data_daily_incr,
+      </if>
+      <if test="taskTotal != null">
+        task_total,
+      </if>
+      <if test="taskSuccess != null">
+        task_success,
+      </if>
+      <if test="taskSuccessRate != null">
+        task_success_rate,
+      </if>
+      <if test="score != null">
+        score,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="projectId != null">
+        #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="projectName != null">
+        #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="kpiDate != null">
+        #{kpiDate,jdbcType=DATE},
+      </if>
+      <if test="cpuTotal != null">
+        #{cpuTotal,jdbcType=INTEGER},
+      </if>
+      <if test="cpuUsed != null">
+        #{cpuUsed,jdbcType=INTEGER},
+      </if>
+      <if test="cpuUsage != null">
+        #{cpuUsage,jdbcType=DOUBLE},
+      </if>
+      <if test="memoryTotal != null">
+        #{memoryTotal,jdbcType=INTEGER},
+      </if>
+      <if test="memoryUsed != null">
+        #{memoryUsed,jdbcType=INTEGER},
+      </if>
+      <if test="memoryUsage != null">
+        #{memoryUsage,jdbcType=DOUBLE},
+      </if>
+      <if test="storageTotal != null">
+        #{storageTotal,jdbcType=BIGINT},
+      </if>
+      <if test="storageUsed != null">
+        #{storageUsed,jdbcType=BIGINT},
+      </if>
+      <if test="storageUsage != null">
+        #{storageUsage,jdbcType=DOUBLE},
+      </if>
+      <if test="dataDailyIncr != null">
+        #{dataDailyIncr,jdbcType=BIGINT},
+      </if>
+      <if test="taskTotal != null">
+        #{taskTotal,jdbcType=INTEGER},
+      </if>
+      <if test="taskSuccess != null">
+        #{taskSuccess,jdbcType=INTEGER},
+      </if>
+      <if test="taskSuccessRate != null">
+        #{taskSuccessRate,jdbcType=DOUBLE},
+      </if>
+      <if test="score != null">
+        #{score,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.rongcapital.chorus.das.entity.ProjectResourceKpiSnapshot">
+    update project_resource_kpi_snapshot
+    <set>
+      <if test="projectId != null">
+        project_id = #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="projectName != null">
+        project_name = #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="kpiDate != null">
+        kpi_date = #{kpiDate,jdbcType=DATE},
+      </if>
+      <if test="cpuTotal != null">
+        cpu_total = #{cpuTotal,jdbcType=INTEGER},
+      </if>
+      <if test="cpuUsed != null">
+        cpu_used = #{cpuUsed,jdbcType=INTEGER},
+      </if>
+      <if test="cpuUsage != null">
+        cpu_usage = #{cpuUsage,jdbcType=DOUBLE},
+      </if>
+      <if test="memoryTotal != null">
+        memory_total = #{memoryTotal,jdbcType=INTEGER},
+      </if>
+      <if test="memoryUsed != null">
+        memory_used = #{memoryUsed,jdbcType=INTEGER},
+      </if>
+      <if test="memoryUsage != null">
+        memory_usage = #{memoryUsage,jdbcType=DOUBLE},
+      </if>
+      <if test="storageTotal != null">
+        storage_total = #{storageTotal,jdbcType=BIGINT},
+      </if>
+      <if test="storageUsed != null">
+        storage_used = #{storageUsed,jdbcType=BIGINT},
+      </if>
+      <if test="storageUsage != null">
+        storage_usage = #{storageUsage,jdbcType=DOUBLE},
+      </if>
+      <if test="dataDailyIncr != null">
+        data_daily_incr = #{dataDailyIncr,jdbcType=BIGINT},
+      </if>
+      <if test="taskTotal != null">
+        task_total = #{taskTotal,jdbcType=INTEGER},
+      </if>
+      <if test="taskSuccess != null">
+        task_success = #{taskSuccess,jdbcType=INTEGER},
+      </if>
+      <if test="taskSuccessRate != null">
+        task_success_rate = #{taskSuccessRate,jdbcType=DOUBLE},
+      </if>
+      <if test="score != null">
+        score = #{score,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.rongcapital.chorus.das.entity.ProjectResourceKpiSnapshot">
+    update project_resource_kpi_snapshot
+    set project_id = #{projectId,jdbcType=BIGINT},
+      project_name = #{projectName,jdbcType=VARCHAR},
+      kpi_date = #{kpiDate,jdbcType=DATE},
+      cpu_total = #{cpuTotal,jdbcType=INTEGER},
+      cpu_used = #{cpuUsed,jdbcType=INTEGER},
+      cpu_usage = #{cpuUsage,jdbcType=DOUBLE},
+      memory_total = #{memoryTotal,jdbcType=INTEGER},
+      memory_used = #{memoryUsed,jdbcType=INTEGER},
+      memory_usage = #{memoryUsage,jdbcType=DOUBLE},
+      storage_total = #{storageTotal,jdbcType=BIGINT},
+      storage_used = #{storageUsed,jdbcType=BIGINT},
+      storage_usage = #{storageUsage,jdbcType=DOUBLE},
+      data_daily_incr = #{dataDailyIncr,jdbcType=BIGINT},
+      task_total = #{taskTotal,jdbcType=INTEGER},
+      task_success = #{taskSuccess,jdbcType=INTEGER},
+      task_success_rate = #{taskSuccessRate,jdbcType=DOUBLE},
+      score = #{score,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="queryDataDailyIncrTotalNumByDate" resultType="java.lang.Long">
+    select sum(data_daily_incr) from project_resource_kpi_snapshot where kpi_date = #{kpiDate,jdbcType=DATE}
+  </select>
+
+  <select id="getTrend" resultType="java.util.HashMap" parameterType="java.lang.String">
+    select kpi_date as kpiDate,
+           sum(data_daily_incr) as dataDailyIncrTotal,
+           sum(task_total) as taskTotal,
+           sum(task_success) as taskSuccess
+    from project_resource_kpi_snapshot
+    where kpi_date>=#{date}
+    group by kpi_date
+  </select>
+</mapper>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.chorus.das.dao.DatalabInfoDOMapper" >
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.DatalabInfo" >
+    <id column="lab_id" property="labId" jdbcType="BIGINT" />
+    <result column="project_code" property="projectCode" jdbcType="VARCHAR" />
+    <result column="lab_code" property="labCode" jdbcType="VARCHAR" />
+    <result column="lab_name" property="labName" jdbcType="VARCHAR" />
+    <result column="lab_desc" property="labDesc" jdbcType="VARCHAR" />
+    <result column="cpu" property="cpu" jdbcType="INTEGER" />
+    <result column="memory" property="memory" jdbcType="INTEGER" />
+    <result column="create_user_id" property="createUserId" jdbcType="VARCHAR" />
+    <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    lab_id, project_code, lab_code, lab_name, lab_desc, cpu, memory, create_user_id,create_user_name, create_time
+  </sql>
+  <delete id="deleteByProjectCodeAndLabCode" parameterType="java.lang.String" >
+    delete from datalab_info
+    where
+      project_code = #{projectCode,jdbcType=VARCHAR}
+      and lab_code = #{labCode,jdbcType=VARCHAR}
+  </delete>
+  <select id="query" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from datalab_info
+    where
+      project_code = #{projectCode,jdbcType=VARCHAR}
+      and lab_code = #{labCode,jdbcType=VARCHAR}
+  </select>
+  <select id="queryByProjectCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from datalab_info
+    where
+    project_code = #{projectCode,jdbcType=VARCHAR}
+  </select>
+</mapper>

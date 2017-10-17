@@ -1,0 +1,111 @@
+= Data Lineage Tech Detail
+Wu Yimin <wuyimin@rongcapital.cn>
+:toc:
+
+数据血缘关系技术方案描述；该方案只是预案，未经代码验证可行性，仅仅体现实现的基本思路，具体细节待实现阶段补充和调整。
+
+== Requirements
+
+. 数据的血缘关系
+. 血缘关系图中 processor 节点能链接到 chorus job 定义的页面
+
+
+== Job
+
+=== The Lifecycle of a Job in Spring XD
+
+ . Register a Job Module
+ . Create a Job Definition
+ . Deploy a Job
+ . Launch a Job
+ . [red]#Job Execution#
+ . Un-deploy a Job
+ . Destroy a Job Definition
+
+
+=== A Job have one Step at least
+
+image::http://docs.spring.io/spring-xd/docs/current-SNAPSHOT/reference/html/images/batch-overview.png[alt]
+
+
+=== 期望的血缘关系
+[ditaa]
+....
+
+            +--------+        /----------------------\       /----------------------\        +----------------+
+            |  tb_1  |------->|  batch_job_step_001  |------>|  batch_job_step_002  |------->|  output_0629   |
+            +--------+        \----------------------/       \----------------------/        +----------------+
+                                    ^
+            +--------+              |
+            |  tb_2  |--------------+
+            +--------+
+....
+
+[ditaa]
+....
+            +--------+        /----------------------\       /----------------------\        +----------------+
+            |  tb_1  |------->|  batch_job_step_001  |------>|  batch_job_step_002  |------->|  output_0630   |
+            +--------+        \----------------------/       \----------------------/        +----------------+
+                                    ^
+            +--------+              |
+            |  tb_2  |--------------+
+            +--------+
+....
+
+. 基于 Step 构建血缘关系
+. 一个job就是处理一个或者个数据源，产生一个或者多个输出(例如按天partition, 或者对复杂数据做提取)；
+. 基于第2条，所以选择在 [red]#Job Execution# 阶段来记录采集 [red]#atlas entities# 信息
+
+=== 相关技术
+
+* BatchJobListener
+** SimpleXdJobExecutionListener
+** SimpleXdStepExecutionListener
+
+
+== Stream
+
+=== The Lifecycle of a Stream in Spring XD
+
+ . create
+ . deploy
+ . [red]#running#
+ . undeploy
+ . delete
+
+=== A Stream consist of the following types of modules:
+
+ . An Input source
+ . Processing step[red]##s##
+ . An Output sink
+
+
+image::http://docs.spring.io/spring-xd/docs/current-SNAPSHOT/reference/html/images/MultipleProcessingSteps.png[alt]
+
+----
+xd> stream create --definition "http | transform --expression=payload.toUpperCase() | splitter --expression=payload.split(",") | log" --name myhttpstream --deploy
+----
+
+=== 期望的血缘关系
+[ditaa]
+....
+
+          +--------+        /----------------------------\        /----------------------------\        +--------+
+          |  http  |------->|  stream_job_processor_001  |------->|  stream_job_processor_002  |------->|  log   |
+          +--------+        \----------------------------/        \----------------------------/        +--------+
+....
+
+. 血缘关系中体现stream job 中的多个processor节点；忽略 message bus 的数据交换步骤
+. stream job 中的 #source#, #sink# 也同样可能是动态的输入源，输出目标
+. 选择在 [red]#running# 阶段来记录采集 [red]#atlas entities# 信息
+
+=== 相关技术
+
+* AbstractPlugin
+** AbstractStreamPlugin
+*** StreamPlugin
+*** SparkStreamingPlugin
+
+== Spring 技术支持
+
+  通过扩展 `ApplicationEvent` 和 `AbstractPlugin` 来支持

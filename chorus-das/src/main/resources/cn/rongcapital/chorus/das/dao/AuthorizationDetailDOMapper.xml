@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.rongcapital.chorus.das.dao.AuthorizationDetailDOMapper">
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.AuthorizationDetail">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="policy_id" jdbcType="VARCHAR" property="policyId" />
+    <result column="policy_name" jdbcType="VARCHAR" property="policyName" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="project_id" jdbcType="BIGINT" property="projectId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="category" jdbcType="VARCHAR" property="category" />
+    <result column="enabled" jdbcType="TINYINT" property="enabled" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, policy_id, policy_name, user_id, project_id, create_time,category,enabled
+  </sql>
+  <select id="selectByUserIdAndProjectId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from authorization_detail
+    where user_id = #{userId} and project_id = #{projectId}
+    and enabled=1
+  </select>
+
+  <select id="selectByProjectId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from authorization_detail
+    where project_id = #{projectId} and enabled=1
+  </select>
+
+  <select id="selectByUserIdAndProjectIdAndName" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from authorization_detail
+    where user_id = #{userId} and project_id = #{projectId} and policy_name = #{policyName}
+    and enabled=1
+  </select>
+  <select id="selectByPolicyId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from authorization_detail
+    where policy_id = #{policyId}
+    and enabled=1
+  </select>
+
+  <update id="isEnabled" >
+    update authorization_detail set enabled=#{enabled}
+    where id=#{id}
+  </update>
+</mapper>

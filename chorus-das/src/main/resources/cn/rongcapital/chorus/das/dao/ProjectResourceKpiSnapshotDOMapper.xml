@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.rongcapital.chorus.das.dao.ProjectResourceKpiSnapshotDOMapper">
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.ProjectResourceKpiSnapshot">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="project_id" jdbcType="BIGINT" property="projectId" />
+    <result column="project_name" jdbcType="VARCHAR" property="projectName" />
+    <result column="kpi_date" jdbcType="DATE" property="kpiDate" />
+    <result column="cpu_total" jdbcType="INTEGER" property="cpuTotal" />
+    <result column="cpu_used" jdbcType="INTEGER" property="cpuUsed" />
+    <result column="cpu_usage" jdbcType="DOUBLE" property="cpuUsage" />
+    <result column="memory_total" jdbcType="INTEGER" property="memoryTotal" />
+    <result column="memory_used" jdbcType="INTEGER" property="memoryUsed" />
+    <result column="memory_usage" jdbcType="DOUBLE" property="memoryUsage" />
+    <result column="storage_total" jdbcType="BIGINT" property="storageTotal" />
+    <result column="storage_used" jdbcType="BIGINT" property="storageUsed" />
+    <result column="storage_usage" jdbcType="DOUBLE" property="storageUsage" />
+    <result column="data_daily_incr" jdbcType="BIGINT" property="dataDailyIncr" />
+    <result column="task_total" jdbcType="INTEGER" property="taskTotal" />
+    <result column="task_success" jdbcType="INTEGER" property="taskSuccess" />
+    <result column="task_success_rate" jdbcType="DOUBLE" property="taskSuccessRate" />
+    <result column="score" jdbcType="TINYINT" property="score" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+
+  <resultMap id="KpiInfoMap" type="cn.rongcapital.chorus.das.entity.ProjectResourceKpiSnapshotVO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="project_id" jdbcType="BIGINT" property="projectId" />
+    <result column="project_name" jdbcType="VARCHAR" property="projectName" />
+    <result column="kpi_date" jdbcType="DATE" property="kpiDate" />
+    <result column="cpu_total" jdbcType="INTEGER" property="cpuTotal" />
+    <result column="cpu_used" jdbcType="INTEGER" property="cpuUsed" />
+    <result column="cpu_usage" jdbcType="DOUBLE" property="cpuUsage" />
+    <result column="memory_total" jdbcType="INTEGER" property="memoryTotal" />
+    <result column="memory_used" jdbcType="INTEGER" property="memoryUsed" />
+    <result column="memory_usage" jdbcType="DOUBLE" property="memoryUsage" />
+    <result column="storage_total" jdbcType="BIGINT" property="storageTotal" />
+    <result column="storage_used" jdbcType="BIGINT" property="storageUsed" />
+    <result column="storage_usage" jdbcType="DOUBLE" property="storageUsage" />
+    <result column="data_daily_incr" jdbcType="BIGINT" property="dataDailyIncr" />
+    <result column="task_total" jdbcType="INTEGER" property="taskTotal" />
+    <result column="task_success" jdbcType="INTEGER" property="taskSuccess" />
+    <result column="task_success_rate" jdbcType="DOUBLE" property="taskSuccessRate" />
+    <result column="score" jdbcType="TINYINT" property="score" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, project_id, project_name, kpi_date, cpu_total, cpu_used, cpu_usage, memory_total, 
+    memory_used, memory_usage, storage_total, storage_used, storage_usage, data_daily_incr, 
+    task_total, task_success, task_success_rate, score, create_time
+  </sql>
+  <select id="selectByKpiDate" parameterType="java.util.Date" resultMap="KpiInfoMap">
+    select
+    prks.*,pi.user_name
+    from project_resource_kpi_snapshot prks
+    left join project_info pi on prks.project_id=pi.project_id
+    where prks.kpi_date = #{kpiDate,jdbcType=DATE}
+    and pi.status_code='1205'
+    order by cpu_usage,id desc
+  </select>
+  <select id="selectByKpiDateWithOrder" parameterType="java.util.Map" resultMap="KpiInfoMap">
+    select
+    prks.*,pi.user_name
+    from project_resource_kpi_snapshot prks
+    left join project_info pi on prks.project_id=pi.project_id
+    where prks.kpi_date = ${kpiDate}
+    and pi.status_code='1205'
+    order by ${orderColumnName} ${orderSort},id desc
+  </select>
+</mapper>

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.rongcapital.chorus.das.dao.ProjectInfoMapper">
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.ProjectInfo">
+    <id column="project_id" jdbcType="BIGINT" property="projectId" />
+    <result column="project_code" jdbcType="VARCHAR" property="projectCode" />
+    <result column="project_name" jdbcType="VARCHAR" property="projectName" />
+    <result column="project_desc" jdbcType="VARCHAR" property="projectDesc" />
+    <result column="project_manager_id" jdbcType="VARCHAR" property="projectManagerId" />
+    <result column="manager_telephone" jdbcType="VARCHAR" property="managerTelephone" />
+    <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user_id" jdbcType="VARCHAR" property="updateUserId" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="caas_topic_id" jdbcType="BIGINT" property="caasTopicId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="status_code" jdbcType="VARCHAR" property="statusCode" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    project_id, project_code, project_name, project_desc, project_manager_id, manager_telephone, 
+    create_user_id, create_time, update_user_id, update_time, caas_topic_id, user_name, status_code
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from project_info
+    where project_id = #{projectId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from project_info
+    where project_id = #{projectId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.rongcapital.chorus.das.entity.ProjectInfo">
+    insert into project_info (project_id, project_code, project_name, 
+      project_desc, project_manager_id, manager_telephone, 
+      create_user_id, create_time, update_user_id, 
+      update_time, caas_topic_id, user_name, status_code
+      )
+    values (#{projectId,jdbcType=BIGINT}, #{projectCode,jdbcType=VARCHAR}, #{projectName,jdbcType=VARCHAR}, 
+      #{projectDesc,jdbcType=VARCHAR}, #{projectManagerId,jdbcType=VARCHAR}, #{managerTelephone,jdbcType=VARCHAR}, 
+      #{createUserId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{caasTopicId,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, #{statusCode,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.rongcapital.chorus.das.entity.ProjectInfo">
+    insert into project_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="projectId != null">
+        project_id,
+      </if>
+      <if test="projectCode != null">
+        project_code,
+      </if>
+      <if test="projectName != null">
+        project_name,
+      </if>
+      <if test="projectDesc != null">
+        project_desc,
+      </if>
+      <if test="projectManagerId != null">
+        project_manager_id,
+      </if>
+      <if test="managerTelephone != null">
+        manager_telephone,
+      </if>
+      <if test="createUserId != null">
+        create_user_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUserId != null">
+        update_user_id,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="caasTopicId != null">
+        caas_topic_id,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="statusCode != null">
+        status_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="projectId != null">
+        #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="projectCode != null">
+        #{projectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="projectName != null">
+        #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="projectDesc != null">
+        #{projectDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="projectManagerId != null">
+        #{projectManagerId,jdbcType=VARCHAR},
+      </if>
+      <if test="managerTelephone != null">
+        #{managerTelephone,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null">
+        #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null">
+        #{updateUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="caasTopicId != null">
+        #{caasTopicId,jdbcType=BIGINT},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCode != null">
+        #{statusCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.rongcapital.chorus.das.entity.ProjectInfo">
+    update project_info
+    <set>
+      <if test="projectCode != null">
+        project_code = #{projectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="projectName != null">
+        project_name = #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="projectDesc != null">
+        project_desc = #{projectDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="projectManagerId != null">
+        project_manager_id = #{projectManagerId,jdbcType=VARCHAR},
+      </if>
+      <if test="managerTelephone != null">
+        manager_telephone = #{managerTelephone,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null">
+        create_user_id = #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null">
+        update_user_id = #{updateUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="caasTopicId != null">
+        caas_topic_id = #{caasTopicId,jdbcType=BIGINT},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+       <if test="statusCode != null">
+        status_code = #{statusCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where project_id = #{projectId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.rongcapital.chorus.das.entity.ProjectInfo">
+    update project_info
+    set project_code = #{projectCode,jdbcType=VARCHAR},
+      project_name = #{projectName,jdbcType=VARCHAR},
+      project_desc = #{projectDesc,jdbcType=VARCHAR},
+      project_manager_id = #{projectManagerId,jdbcType=VARCHAR},
+      manager_telephone = #{managerTelephone,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user_id = #{updateUserId,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      caas_topic_id = #{caasTopicId,jdbcType=BIGINT},
+      user_name = #{userName,jdbcType=VARCHAR},
+      status_code = #{statusCode,jdbcType=VARCHAR}
+    where project_id = #{projectId,jdbcType=BIGINT}
+  </update>
+
+  <select id="queryCountNum" resultType="java.lang.Integer">
+    select count(*) from project_info where status_code='1205'
+  </select>
+</mapper>

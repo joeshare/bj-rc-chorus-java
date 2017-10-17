@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:batch="http://www.springframework.org/schema/batch"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+
+
+		http://www.springframework.org/schema/batch
+		http://www.springframework.org/schema/batch/spring-batch.xsd">
+
+	<batch:job id="tableSample">
+		<batch:step id="step1">
+			<batch:tasklet ref="tableSampleTasklet" />
+		</batch:step>
+		<batch:listeners>
+			<batch:listener ref="logListener"></batch:listener>
+		</batch:listeners>
+	</batch:job>
+	<bean id="logListener" class="cn.rongcapital.log.JobListenerForLog"></bean>
+	<bean id="tableSampleTasklet" class="cn.rongcapital.chorus.modules.table_sample.TableSampleTasklet">
+		<property name="table">
+            <value>${table}</value>
+		</property>
+        <property name="sampleType">
+            <value>${sampleType}</value>
+        </property>
+        <property name="sampleRate">
+            <value>${sampleRate}</value>
+        </property>
+        <property name="outputTable">
+            <value>${outputTable}</value>
+        </property>
+        <property name="sampleCount">
+            <value>${sampleCount}</value>
+        </property>
+        <property name="dwDbName">
+            <value>${dwDbName}</value>
+        </property>
+        <property name="where">
+            <value>${where:}</value>
+        </property>
+        <property name="dwConnectUrl">
+            <value>${dwConnectUrl}</value>
+        </property>
+        <property name="dwUserName">
+            <value>${dwUserName}</value>
+        </property>
+        <property name="coverBefore">
+            <value>${coverBefore}</value>
+        </property>
+	</bean>
+</beans>

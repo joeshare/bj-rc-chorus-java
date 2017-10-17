@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.rongcapital.chorus.das.dao.TableMonitorMapper">
+
+    <resultMap id="BaseResultMap"
+        type="cn.rongcapital.chorus.das.entity.TableMonitorInfo">
+        <id column="id" property="id" />
+        <result column="project_id" property="projectId"></result>
+        <result column="table_info_id" property="tableInfoId"></result>
+        <result column="table_name" property="tableName"></result>
+        <result column="monitor_date" property="monitorDate"></result>
+        <result column="rows" property="rows"></result>
+        <result column="storage_size" property="storageSize"></result>
+    </resultMap>
+
+    <insert id="insert">
+        insert into table_monitor(project_id,
+        table_info_id, monitor_date, rows, storage_size)
+        values(
+        #{table.projectId},
+        #{table.tableInfoId},
+        #{table.monitorDate},
+        #{table.rows},
+        #{table.storageSize}
+        )
+    </insert>
+
+    <select id="selectRowsTop" resultMap="BaseResultMap">
+        SELECT
+        monitor.*,tb.table_name from table_monitor as monitor INNER JOIN
+        table_info tb ON monitor.table_info_id = tb.table_info_id
+        WHERE
+        monitor.project_id = #{projectId} and monitor.monitor_date in
+        (SELECT max(monitor_date) from table_monitor)
+        ORDER BY
+        monitor.rows DESC
+        LIMIT #{top}
+    </select>
+
+    <select id="selectStorageTop" resultMap="BaseResultMap">
+        SELECT
+        monitor.*,tb.table_name from table_monitor as monitor INNER JOIN
+        table_info tb ON monitor.table_info_id = tb.table_info_id
+        WHERE
+        monitor.project_id = #{projectId} and monitor.monitor_date in
+        (SELECT max(monitor_date) from table_monitor)
+        ORDER BY
+        monitor.storage_size
+        DESC
+        LIMIT #{top}
+    </select>
+
+    <select id="selectStorageTotal" resultType="long">
+        select
+        COALESCE(sum(monitor.storage_size),0) from
+        table_monitor as
+        monitor where
+        project_id = #{projectId} and
+        monitor.monitor_date
+        in (SELECT max(monitor_date) from
+        table_monitor)
+    </select>
+
+    <select id="getTablesTotal" resultType="long">
+        select
+        count(table_info_id) from table_info where project_id =
+        #{projectId}
+    </select>
+
+    <delete id="clearToday">
+        DELETE FROM table_monitor WHERE monitor_date =
+        curdate()
+    </delete>
+</mapper>

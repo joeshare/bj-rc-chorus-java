@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.chorus.das.dao.ProjectInfoDOMapper">
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.ProjectInfo">
+    <id column="project_id" property="projectId" jdbcType="BIGINT" />
+    <result column="project_code" property="projectCode" jdbcType="VARCHAR" />
+    <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+    <result column="project_desc" property="projectDesc" jdbcType="VARCHAR" />
+    <result column="project_manager_id" property="projectManagerId" jdbcType="VARCHAR" />
+    <result column="manager_telephone" property="managerTelephone" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_user_id" property="updateUserId" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="caas_topic_id" property="caasTopicId" jdbcType="BIGINT" />
+    <result column="status_code" property="statusCode" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ProjectInfoByUserIdMap" type="cn.rongcapital.chorus.das.entity.ProjectInfoDO">
+    <id column="project_id" property="projectId" jdbcType="BIGINT" />
+    <result column="project_code" property="projectCode" jdbcType="VARCHAR" />
+    <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+    <result column="project_desc" property="projectDesc" jdbcType="VARCHAR" />
+    <result column="project_manager_id" property="projectManagerId" jdbcType="VARCHAR" />
+    <result column="manager_telephone" property="managerTelephone" jdbcType="VARCHAR" />
+    <result column="create_user_id" property="createUserId" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="caas_topic_id" property="caasTopicId" jdbcType="BIGINT" />
+    <result column="status_code" property="statusCode" jdbcType="VARCHAR" />
+    <result column="role_id" property="roleId" jdbcType="VARCHAR" />
+    <result column="role_code" property="roleCode" jdbcType="VARCHAR" />
+    <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    project_id, project_code, project_name, project_desc, project_manager_id, manager_telephone, 
+    create_user_id, create_time, update_user_id, update_time, status_code,user_name
+  </sql>
+  <!-- 根据项目编码查询项目= -->
+  <select id="selectByProjectCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from project_info
+    where project_code = #{projectCode}
+  </select>
+  <!-- 根据项目名称查询项目 -->
+  <select id="selectByProjectName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from project_info
+    where project_name = #{projectName}
+  </select>
+  <!-- 根据项目编码删除项目 -->
+  <delete id="deleteByProjectCode" parameterType="java.lang.String">
+    delete from project_info
+    where project_code = #{projectCode}
+  </delete>
+  <!-- 根据项目名称删除项目 -->
+  <delete id="deleteByProjectName" parameterType="java.lang.String">
+    delete from project_info
+    where project_name = #{projectName}
+  </delete>
+  <!-- 根据用户 ID 查询项目列表 -->
+  <select id="selectAllProjectByUserId" resultMap="ProjectInfoByUserIdMap">
+      SELECT
+        pi.project_id ,
+        pi.project_code ,
+        pi.project_name ,
+        pi.project_desc ,
+        pi.project_manager_id ,
+        pi.create_user_id,
+        pi.caas_topic_id,
+        pi.user_name,
+        pi.create_time,
+        pi.status_code,
+        r.role_id,
+        r.role_code,
+        r.role_name
+      FROM
+        project_info pi,project_member_mapping pmm,t_role r
+	  WHERE pmm.project_id=pi.project_id and pmm.role_id=r.role_id and pmm.user_id=#{userId} and pi.status_code='1205'
+  </select>
+  <!-- 根据条件查询项目信息列表 -->
+  <select id="selectProjectInfoByCondition" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from project_info
+    where
+    <choose>
+      <when test="isAccurate">
+        <if test="projectName != null">
+          project_name LIKE CONCAT ('%', #{projectName}, '%') AND
+        </if>
+        <if test="projectCode != null">
+          project_code LIKE CONCAT ('%', #{projectCode}, '%') AND
+        </if>
+      </when>
+      <otherwise>
+        <if test="projectName != null">
+          project_name = #{projectName} AND
+        </if>
+        <if test="projectCode != null">
+          project_code = #{projectCode} AND
+        </if>
+      </otherwise>
+    </choose>
+    status_code='1205'
+  </select>
+  <!-- 添加数据 -->
+  <insert id="insertAndGetId" parameterType="cn.rongcapital.chorus.das.entity.ProjectInfo" useGeneratedKeys="true" keyProperty="projectId">
+    insert into project_info (project_id, project_code, project_name,
+    project_desc, project_manager_id, manager_telephone,
+    create_user_id, create_time, update_user_id,
+    update_time, caas_topic_id, user_name, status_code)
+    values (#{projectId,jdbcType=BIGINT}, #{projectCode,jdbcType=VARCHAR}, #{projectName,jdbcType=VARCHAR},
+    #{projectDesc,jdbcType=VARCHAR}, #{projectManagerId,jdbcType=VARCHAR}, #{managerTelephone,jdbcType=VARCHAR},
+    #{createUserId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=VARCHAR},
+    #{updateTime,jdbcType=TIMESTAMP}, #{caasTopicId,jdbcType=BIGINT}, #{userName}, #{statusCode,jdbcType=VARCHAR})
+  </insert>
+
+  <select id="queryAll" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM project_info
+  </select>
+  <select id="queryAllActive" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM project_info
+    where status_code = 1205
+  </select>
+</mapper>

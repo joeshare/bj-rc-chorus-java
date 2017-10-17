@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:hdp="http://www.springframework.org/schema/hadoop"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:batch="http://www.springframework.org/schema/batch"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/hadoop
+		http://www.springframework.org/schema/hadoop/spring-hadoop.xsd
+		http://www.springframework.org/schema/batch
+		http://www.springframework.org/schema/batch/spring-batch.xsd
+		http://www.springframework.org/schema/util
+		http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<batch:job id="resourceKPIStatsJob">
+		<batch:step id="step1">
+			<batch:tasklet ref="resourceKPIStatsTasklet" />
+		</batch:step>
+		<batch:listeners>
+			<batch:listener ref="logListener"></batch:listener>
+		</batch:listeners>
+	</batch:job>
+	<bean id="logListener" class="cn.rongcapital.log.JobListenerForLog"></bean>
+
+	<bean id="chorusDataSource" class="cn.rongcapital.chorus.modules.resource.kpi.snapshot.DataSource">
+		<property name="driverClassName">
+			<value>com.mysql.jdbc.Driver</value>
+		</property>
+		<property name="url">
+			<value>${chorusDBURL}</value>
+		</property>
+		<property name="userName">
+			<value>${userName}</value>
+		</property>
+		<property name="password">
+			<value>${password}</value>
+		</property>
+	</bean>
+	<bean id="xdDataSource" class="cn.rongcapital.chorus.modules.resource.kpi.snapshot.DataSource">
+		<property name="driverClassName">
+			<value>com.mysql.jdbc.Driver</value>
+		</property>
+		<property name="url">
+			<value>${xdDBURL}</value>
+		</property>
+		<property name="userName">
+			<value>${xdUserName}</value>
+		</property>
+		<property name="password">
+			<value>${xdPassword}</value>
+		</property>
+	</bean>
+
+	<bean id="projectResourceKPIStats" class="cn.rongcapital.chorus.modules.resource.kpi.snapshot.ProjectResourceKPIStats">
+		<!--<constructor-arg index="0" ref="chorusDataSource"/>-->
+		<!--<constructor-arg index="1" ref="xdDataSource" />-->
+	</bean>
+
+	<bean id="platformResourceStats" class="cn.rongcapital.chorus.modules.resource.kpi.snapshot.PlatformResourceStats"></bean>
+
+	<bean id="yarnClientFactoryBean" class="cn.rongcapital.chorus.modules.resource.kpi.snapshot.YarnClientFactoryBean"></bean>
+
+	<bean id="resourceKPIStatsTasklet" class="cn.rongcapital.chorus.modules.resource.kpi.snapshot.ResourceKPISnapshotTasklet">
+		<!--<property name="projectResourceKPIStats" ref="projectResourceKPIStats"/>-->
+		<property name="retries">
+			<value>${retries}</value>
+		</property>
+	</bean>
+</beans>

@@ -1,0 +1,215 @@
+= 元数据管理
+Wu Yimin <wuyimin@rongcapital.cn>
+:toc:
+
+
+== 表数据管理
+
+
+==== TableInfo
+
+----
+id  <long>,
+projectId <long>,
+createTime <long>,
+statusCode <int>,
+name <String>,
+code <String>,
+field <Enum>,
+type <Enum>,
+snapshot <Boolean>,
+updateFrequency <Enum>,
+sla <String>,
+security <Enum>,
+open <Boolean>,
+description <String>
+
+----
+
+NOTE: unique_index(projectId, name)
+
+==== ColumnInfo
+
+----
+id <long>,
+table_id <long>,
+projectId <long>,
+createTime <long>,
+statusCode <int>,
+name <String>,
+type <Enum>,
+length <int>,
+precision <int>,
+key <Boolean>,
+foreignKey <Boolean>,
+nullable <Boolean>,
+index <Boolean>,
+partitionKey <Boolean>,
+desc <String>,
+security <Enum>
+----
+
+== Atlas 类型系统设计
+
+==== Security
+
+----
+chor_security_level(EnumType)
+- values [A,B,C]
+----
+
+==== DataUpdateFrequency
+
+----
+chor_data_update_frequency(EnumType)
+- values [REALTIME, DAILY]
+----
+
+==== DataType
+
+----
+chor_data_type(EnumType)
+- values [BASIC, DIMENSION, REALTIME]
+----
+
+==== BusinessField
+
+----
+chor_business_field(EnumType)
+- values [USER,ORDER,LOAN]
+----
+
+==== HiveDB
+
+- 创建项目时创建对应的entity，并发送到 AtlasServer
+
+[subs=+macros]
+----
+chor_hive_db(ClassType)
+- super types [Referenceable]
+- attributes
+    [name, clusterName, description, locationUri, parameters, ownerName, ownerType,
+    pass:quotes[*createTime, createUser, createdUserId, project, projectId*]]
+----
+
+==== HiveTable
+
+[subs=+macros]
+----
+chor_hive_table(ClassType)
+- super types [DataSet]
+- attributes
+  [name, db, owner, createTime, lastAccessTime, comment, retention, sd, partitionKeys, columns, aliases, parameters, viewOriginalText, viewExpandedText, tableType, temporary,
+  pass:quotes[*createUser, createdUserId, project, projectId, statusCode, code, businessField, dataType, dataUpdateFrequency, snapshot, sla, open, securityLevel*]]
+----
+
+==== HiveColumn
+
+[subs=+macros]
+----
+chor_hive_column(ClassType)
+- super types [Referenceable]
+- attributes
+  [name, type, comment, table,
+  pass:quotes[*project, projectId, statusCode, length, precision, isKey, isForeignKey, isNull, isIndex, isPartitionKey, securityLevel, createTime, updateTime*]]
+----
+
+== Chorus 技术实现步骤
+
+. http://jira.dataengine.com/browse/CHOR-150[JIRA-380]:设计数据管理的atlas类型系统
+. http://jira.dataengine.com/browse/CHOR-384[JIRA-384]:创建项目时发送 [red]#HiveDB# 类型的entity到AtlasServer
+. http://jira.dataengine.com/browse/CHOR-381[JIRA-381]:数据管理-》数据表管理【新建数据表】：保存 [red]#HiveTable# 和 [red]#HiveColumn# 的entity到AtlasServer
+. http://jira.dataengine.com/browse/CHOR-382[JIRA-382]:数据管理-》数据表管理：页面展示list，详情展示修改为查询 atlas [red]#HiveTable# entities
+. http://jira.dataengine.com/browse/CHOR-383[JIRA-383]:数据管理-》元数据查询：list、搜索、详情和权限申请的查询修改为查询 atlas [red]#HiveTable# entities
+. 数据管理-》元数据查询【申请权限】：apply表保存对应的 [red]#HiveTable# entity的id
+. 其它依赖接口列表:
+** 需要根据table id 获得table name[table monitor]
+** 统计项目有多少表[table monitor]
+
+
+
+
+== 版本问题
+
+业务变化导致需要修改 type;
+
+
+
+.Atlas类型系统与真实的table的对应关系
+
+[ditaa]
+....
+
+           +-------------------+
+           |  real_hive_table  |
+           +-------------------+
+                     ^
+                     |                  /--------------------\       /-----------------\
+                     +-----------------|  atlas_entity_001  |------>|  atlas_type_v1  |
+                     ^                  \--------------------/       \-----------------/
+                     |                  /--------------------\       /-----------------\
+                     +------------------|  atlas_entity_002  |------>|  atlas_type_v2  |
+                                        \--------------------/       \-----------------/
+
+
+....
+
+.血缘关系
+[ditaa]
+....
+
+            /--------------------\        /------------------\        /----------------------\
+            |  atlas_entity_001  |------->|  some_processor  |------->|  other_atlas_entity  |
+            \--------------------/        \------------------/        \----------------------/
+                      ^
+                      |
+                      +
+            /--------------------\        /------------------\        /---------------------\
+            |  atlas_entity_002  |------->|  some_processor  |------->|  other_atlas_entity |
+            \--------------------/        \------------------/        \---------------------/
+                      ^
+                      |
+                      +
+            +-------------------+
+            |  real_hive_table  |
+            +-------------------+
+....
+
+
+. 业务变化时，貌似可以直接新增type类型，并根据新的类型系统保存新的entiies即可; 即可基本满足元数据管理和血缘关系的需求；不需要考虑在两个类型间创建关系，或者可以在高版本的type中指定最近的低版本type为其**super types**
+. 限制
+** A type in Atlas is identified uniquely by a ‘name’
+** 所以在查询entities时，需要查询多个版本的type对应的数据
+
+. 可以使用版本化的type name:
+** chor_hive_db_v1
+
+
+== Out-of-box Types
+----
+hive_table
+	AtlasAttributeDef{name='db', typeName='hive_db', getIsOptional=false, cardinality=SINGLE, valuesMinCount=1, valuesMaxCount=1, isUnique=false, isIndexable=false, constraints=[]}
+	AtlasAttributeDef{name='createTime', typeName='date', getIsOptional=true, cardinality=SINGLE, valuesMinCount=0, valuesMaxCount=1, isUnique=false, isIndexable=false, constraints=[]}
+	AtlasAttributeDef{name='lastAccessTime', typeName='date', getIsOptional=true, cardinality=SINGLE, valuesMinCount=0, valuesMaxCount=1, isUnique=false, isIndexable=false, constraints=[]}
+	AtlasAttributeDef{name='comment', typeName='string', getIsOptional=true, cardinality=SINGLE, valuesMinCount=0, valuesMaxCount=1, isUnique=false, isIndexable=false, constraints=[]}
+	AtlasAttributeDef{name='retention', typeName='int', getIsOptional=true, cardinality=SINGLE, valuesMinCount=0, valuesMaxCount=1, isUnique=false, isIndexable=false, constraints=[]}
+	AtlasAttributeDef{name='sd', typeName='hive_storagedesc', getIsOptional=true, cardinality=SINGLE, valuesMinCount=0, valuesMaxCount=1, isUnique=false, isIndexable=false, constraints=[AtlasConstraintDef{type='ownedRef', params='null'}]}
+	AtlasAttributeDef{name='partitionKeys', typeName='array<hive_column>', getIsOptional=true, cardinality=SINGLE, valuesMinCount=0, valuesMaxCount=1, isUnique=false, isIndexable=false, constraints=[AtlasConstraintDef{type='ownedRef', params='null'}]}
+	AtlasAttributeDef{name='aliases', typeName='array<string>', getIsOptional=true, cardinality=SINGLE, valuesMinCount=0, valuesMaxCount=1, isUnique=false, isIndexable=false, constraints=[]}
+	AtlasAttributeDef{name='columns', typeName='array<hive_column>', getIsOptional=true, cardinality=SINGLE, valuesMinCount=0, valuesMaxCount=1, isUnique=false, isIndexable=false, constraints=[AtlasConstraintDef{type='ownedRef', params='null'}]}
+	AtlasAttributeDef{name='parameters', typeName='map<string,string>', getIsOptional=true, cardinality=SINGLE, valuesMinCount=0, valuesMaxCount=1, isUnique=false, isIndexable=false, constraints=[]}
+	AtlasAttributeDef{name='viewOriginalText', typeName='string', getIsOptional=true, cardinality=SINGLE, valuesMinCount=0, valuesMaxCount=1, isUnique=false, isIndexable=false, constraints=[]}
+	AtlasAttributeDef{name='viewExpandedText', typeName='string', getIsOptional=true, cardinality=SINGLE, valuesMinCount=0, valuesMaxCount=1, isUnique=false, isIndexable=false, constraints=[]}
+	AtlasAttributeDef{name='tableType', typeName='string', getIsOptional=true, cardinality=SINGLE, valuesMinCount=0, valuesMaxCount=1, isUnique=false, isIndexable=false, constraints=[]}
+	AtlasAttributeDef{name='temporary', typeName='boolean', getIsOptional=true, cardinality=SINGLE, valuesMinCount=0, valuesMaxCount=1, isUnique=false, isIndexable=true, constraints=[]}
+hive_db
+	AtlasAttributeDef{name='clusterName', typeName='string', getIsOptional=false, cardinality=SINGLE, valuesMinCount=1, valuesMaxCount=1, isUnique=false, isIndexable=true, constraints=[]}
+	AtlasAttributeDef{name='location', typeName='string', getIsOptional=true, cardinality=SINGLE, valuesMinCount=0, valuesMaxCount=1, isUnique=false, isIndexable=false, constraints=[]}
+	AtlasAttributeDef{name='parameters', typeName='map<string,string>', getIsOptional=true, cardinality=SINGLE, valuesMinCount=0, valuesMaxCount=1, isUnique=false, isIndexable=false, constraints=[]}
+	AtlasAttributeDef{name='ownerType', typeName='hive_principal_type', getIsOptional=true, cardinality=SINGLE, valuesMinCount=0, valuesMaxCount=1, isUnique=false, isIndexable=false, constraints=[]}
+hive_column
+	AtlasAttributeDef{name='type', typeName='string', getIsOptional=false, cardinality=SINGLE, valuesMinCount=1, valuesMaxCount=1, isUnique=false, isIndexable=true, constraints=[]}
+	AtlasAttributeDef{name='comment', typeName='string', getIsOptional=true, cardinality=SINGLE, valuesMinCount=0, valuesMaxCount=1, isUnique=false, isIndexable=false, constraints=[]}
+	AtlasAttributeDef{name='position', typeName='int', getIsOptional=true, cardinality=SINGLE, valuesMinCount=0, valuesMaxCount=1, isUnique=false, isIndexable=false, constraints=[]}
+	AtlasAttributeDef{name='table', typeName='hive_table', getIsOptional=true, cardinality=SINGLE, valuesMinCount=0, valuesMaxCount=1, isUnique=false, isIndexable=false, constraints=[]}
+----

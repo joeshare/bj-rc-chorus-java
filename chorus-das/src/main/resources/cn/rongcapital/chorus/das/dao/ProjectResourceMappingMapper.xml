@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.chorus.das.dao.ProjectResourceMappingMapper" >
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.ProjectResourceMapping" >
+    <id column="project_resource_out_id" property="projectResourceOutId" jdbcType="BIGINT" />
+    <result column="project_id" property="projectId" jdbcType="BIGINT" />
+    <result column="resource_out_id" property="resourceOutId" jdbcType="BIGINT" />
+    <result column="status_code" property="statusCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    project_resource_out_id, project_id, resource_out_id, status_code
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from project_resource_mapping
+    where project_resource_out_id = #{projectResourceOutId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from project_resource_mapping
+    where project_resource_out_id = #{projectResourceOutId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.rongcapital.chorus.das.entity.ProjectResourceMapping" >
+    insert into project_resource_mapping (project_resource_out_id, project_id, resource_out_id, 
+      status_code)
+    values (#{projectResourceOutId,jdbcType=BIGINT}, #{projectId,jdbcType=BIGINT}, #{resourceOutId,jdbcType=BIGINT}, 
+      #{statusCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.rongcapital.chorus.das.entity.ProjectResourceMapping" >
+    insert into project_resource_mapping
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="projectResourceOutId != null" >
+        project_resource_out_id,
+      </if>
+      <if test="projectId != null" >
+        project_id,
+      </if>
+      <if test="resourceOutId != null" >
+        resource_out_id,
+      </if>
+      <if test="statusCode != null" >
+        status_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="projectResourceOutId != null" >
+        #{projectResourceOutId,jdbcType=BIGINT},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="resourceOutId != null" >
+        #{resourceOutId,jdbcType=BIGINT},
+      </if>
+      <if test="statusCode != null" >
+        #{statusCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.rongcapital.chorus.das.entity.ProjectResourceMapping" >
+    update project_resource_mapping
+    <set >
+      <if test="projectId != null" >
+        project_id = #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="resourceOutId != null" >
+        resource_out_id = #{resourceOutId,jdbcType=BIGINT},
+      </if>
+      <if test="statusCode != null" >
+        status_code = #{statusCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where project_resource_out_id = #{projectResourceOutId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.rongcapital.chorus.das.entity.ProjectResourceMapping" >
+    update project_resource_mapping
+    set project_id = #{projectId,jdbcType=BIGINT},
+      resource_out_id = #{resourceOutId,jdbcType=BIGINT},
+      status_code = #{statusCode,jdbcType=VARCHAR}
+    where project_resource_out_id = #{projectResourceOutId,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,115 @@
+{
+  "name": "a-json-dsl-2",
+  "description": "my workflow for test3",
+  "version": 1,
+  "tasks": [
+           {
+             "name": "mytaskX",
+             "taskReferenceName": "mytaskX",
+             "type": "SIMPLE",
+             "inputParameters": {
+                "ai1": "${workflow.input.wi1}",
+                 "ai2": "${workflow.input.wi2}"
+               }
+          },
+          {
+          "name": "fork_task",
+          "taskReferenceName": "fork1",
+          "type": "FORK",
+          "forkTasks": [
+            [
+              {
+                "name": "mytaskA",
+                "taskReferenceName": "mytaskA",
+                "type": "SIMPLE",
+                "inputParameters": {
+                  "ai1": "${workflow.input.wi1}",
+                  "ai2": "${workflow.input.wi2}"
+                }
+              },
+              {
+                "name": "fork_task2",
+                "taskReferenceName": "fork2",
+                "type": "FORK",
+                "forkTasks": [
+                  [
+                   {
+                    "name": "mytaskB",
+                    "taskReferenceName": "mytaskB",
+                    "type": "SIMPLE",
+                    "workerType": "CHORUS",
+                    "workerParams": {
+                       "moduleName": "RDB2Hive",
+                       "containerId": "aaaaaaaa111111"
+                     },
+                    "inputParameters": {
+                      "ai1": "${workflow.input.wi1}",
+                      "ai2": "${workflow.input.wi2}"
+                      }
+                    }
+                  ],
+                  [
+                   {
+                      "name": "mytaskC",
+                      "taskReferenceName": "mytaskC",
+                      "type": "SIMPLE",
+                      "inputParameters": {
+                        "ai1": "${workflow.input.wi1}",
+                        "ai2": "${workflow.input.wi2}"
+                      }
+                    }
+                  ]
+                ]
+              },
+              {
+                "name": "join2",
+                "taskReferenceName": "join2",
+                "type": "JOIN",
+                "joinOn": [
+                  "mytaskB",
+                  "mytaskC"
+                ]
+              }
+            ],
+            [
+              {
+                 "name": "mytaskD",
+                 "taskReferenceName": "mytaskD",
+                 "type": "SIMPLE",
+                 "inputParameters": {
+                   "ai1": "${workflow.input.wi1}",
+                   "ai2": "${workflow.input.wi2}"
+                 }
+               }
+             ],
+             [
+               {
+                  "name": "mytaskF",
+                  "taskReferenceName": "mytaskF",
+                  "type": "SIMPLE",
+                  "inputParameters": {
+                    "ai1": "${workflow.input.wi1}",
+                    "ai2": "${workflow.input.wi2}"
+                  }
+                }
+              ]
+            ]
+      },
+       {
+           "name": "join",
+           "taskReferenceName": "join",
+           "type": "JOIN",
+           "joinOn": [
+             "mytaskA",
+             "mytaskD"
+           ]
+       }
+  ],
+  "outputParameters": {
+      "ao1": "${node1.output.ao1}",
+      "ao2": "${node1.output.ao2}",
+      "bo1": "${node2.output.bo1}",
+      "bo2": "${node2.output.bo2}"
+  },
+  "schemaVersion": 2
+}

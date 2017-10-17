@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:hdp="http://www.springframework.org/schema/hadoop"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:batch="http://www.springframework.org/schema/batch"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/hadoop
+		http://www.springframework.org/schema/hadoop/spring-hadoop.xsd
+		http://www.springframework.org/schema/batch
+		http://www.springframework.org/schema/batch/spring-batch.xsd
+		http://www.springframework.org/schema/util
+		http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<batch:job id="python">
+		<batch:step id="step1">
+			<batch:tasklet ref="pythonTasklet" />
+		</batch:step>
+		<batch:listeners>
+			<batch:listener ref="logListener"></batch:listener>
+		</batch:listeners>
+	</batch:job>
+	<bean id="logListener" class="cn.rongcapital.log.JobListenerForLog"></bean>
+	<bean id="pythonTasklet" class="cn.rongcapital.chorus.modules.python.PythonTasklet">
+		<property name="scriptPath">
+            <value>${scriptPath}</value>
+		</property>
+	</bean>
+</beans>

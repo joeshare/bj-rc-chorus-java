@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.chorus.das.dao.ResourceTemplateDOMapper" >
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.ResourceTemplate" >
+    <id column="resource_template_id" property="resourceTemplateId" jdbcType="BIGINT" />
+    <result column="resource_name" property="resourceName" jdbcType="VARCHAR" />
+    <result column="resource_cpu" property="resourceCpu" jdbcType="INTEGER" />
+    <result column="resource_memory" property="resourceMemory" jdbcType="INTEGER" />
+    <result column="resource_storage" property="resourceStorage" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status_code" property="statusCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    resource_template_id, resource_name, resource_cpu, resource_memory, resource_storage, 
+    create_time, update_time, status_code
+  </sql>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from resource_template
+  </select>
+</mapper>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.chorus.das.dao.ResourceOperationDOMapper">
+    <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.ResourceOperationDO">
+        <id column="operation_id" property="operationId" jdbcType="INTEGER"/>
+        <result column="resource_id" property="resourceId" jdbcType="INTEGER"/>
+        <result column="project_id" property="projectId" jdbcType="INTEGER"/>
+        <result column="project_name" property="projectName" jdbcType="VARCHAR"/>
+        <result column="create_user_id" property="createUserId" jdbcType="VARCHAR"/>
+        <result column="create_user_name" property="createUserName" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_user_id" property="updateUserId" jdbcType="VARCHAR"/>
+        <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="reason" property="reason" jdbcType="VARCHAR"/>
+        <result column="status_code" property="statusCode" jdbcType="VARCHAR"/>
+        <result column="status_desc" property="statusDesc" jdbcType="VARCHAR"/>
+        <result column="notes" property="notes" jdbcType="VARCHAR"/>
+        <result column="cpu" property="cpu" jdbcType="INTEGER"/>
+        <result column="memory" property="memory" jdbcType="INTEGER"/>
+        <result column="storage" property="storage" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        operation_id, resource_id, project_id,project_name, create_user_id,create_user_name,
+        create_time, update_user_id,update_user_name,
+        update_time, reason, status_code, status_desc, notes,cpu, memory, storage
+    </sql>
+    <select id="selectByStatus" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        r.operation_id, r.resource_id, r.project_id,p.project_name, r.create_user_id, r.create_user_name,
+        r.create_time, r.update_user_id, r.update_user_name,
+        r.update_time, r.reason, r.status_code, s.status_name as status_desc, r.notes,r.cpu as cpu,
+        r.memory as memory, r.storage as storage
+        from resource_operation r left join project_info p on r.project_id = p.project_id
+        left join common_status s on r.status_code = s.status_code
+        where r.status_code = #{statusCode,jdbcType=VARCHAR}
+        and p.status_code='1205'
+        order by r.create_time desc
+    </select>
+    <select id="selectByCreateProjectId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        r.operation_id, r.resource_id, r.project_id,p.project_name, r.create_user_id,r.create_user_name,
+        r.create_time, r.update_user_id,r.update_user_name,
+        r.update_time, r.reason, r.status_code , s.status_name as status_desc, r.notes,r.cpu as cpu,
+        r.memory as memory, r.storage as storage
+        from resource_operation r left join project_info p on r.project_id = p.project_id
+        left join common_status s on r.status_code = s.status_code
+        where r.project_id = #{projectId,jdbcType=VARCHAR}
+        order by r.create_time desc
+    </select>
+</mapper>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.rongcapital.chorus.das.dao.TaskExecutionTimeoutMapper">
+
+    <resultMap id="BaseResultMap"
+        type="cn.rongcapital.chorus.das.entity.TaskExecutionTimeout">
+        <id column="task_execution_id" property="taskExecutionId" />
+        <result column="task_id" property="taskId"></result>
+        <result column="start_time" property="startTime"></result>
+        <result column="expect_end_time" property="expectEndTime"></result>
+    </resultMap>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        select
+        task_execution_id,task_id,start_time,expect_end_time from
+        task_execution_timeout where task_execution_id =
+        #{taskExecutionId}
+    </select>
+
+    <select id="filterNotified" resultType="java.lang.Long">
+        select task_execution_id from task_execution_timeout
+        where
+        task_execution_id in
+        <trim prefix="(" suffix=")">
+            <foreach collection="xdExecutions" item="execution"
+                separator=",">
+                #{execution.executionId}
+            </foreach>
+        </trim>
+    </select>
+
+    <insert id="insert">
+        insert into
+        task_execution_timeout(task_execution_id,task_id, start_time,
+        expect_end_time,email_status,email,error,job_name)
+        values(#{timeout.taskExecutionId},
+        #{timeout.taskId},
+        #{timeout.startTime},
+        #{timeout.expectEndTime},
+        #{timeout.status},
+        #{timeout.email},
+        #{timeout.error},
+        #{timeout.jobName}
+        )
+    </insert>
+</mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:batch="http://www.springframework.org/schema/batch"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+
+
+		http://www.springframework.org/schema/batch
+		http://www.springframework.org/schema/batch/spring-batch.xsd">
+
+	<batch:job id="fileSample">
+		<batch:step id="step1">
+			<batch:tasklet ref="fileSampleTasklet" />
+		</batch:step>
+		<batch:listeners>
+			<batch:listener ref="logListener"></batch:listener>
+		</batch:listeners>
+	</batch:job>
+	<bean id="logListener" class="cn.rongcapital.log.JobListenerForLog"></bean>
+	<bean id="fileSampleTasklet" class="cn.rongcapital.chorus.modules.file_sample.FileSampleTasklet">
+		<property name="path">
+            <value>${path}</value>
+		</property>
+        <property name="sampleType">
+            <value>${sampleType}</value>
+        </property>
+        <property name="sampleRate">
+            <value>${sampleRate}</value>
+        </property>
+        <property name="sampleCount">
+            <value>${sampleCount}</value>
+        </property>
+        <property name="outputPath">
+            <value>${outputPath}</value>
+        </property>
+	</bean>
+</beans>

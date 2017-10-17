@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.rongcapital.chorus.das.dao.InstanceInfoMapper">
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.InstanceInfo">
+    <id column="instance_id" jdbcType="BIGINT" property="instanceId" />
+    <result column="project_id" jdbcType="BIGINT" property="projectId" />
+    <result column="resource_inner_id" jdbcType="BIGINT" property="resourceInnerId" />
+    <result column="resource_template_id" jdbcType="BIGINT" property="resourceTemplateId" />
+    <result column="instance_size" jdbcType="INTEGER" property="instanceSize" />
+    <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="status_code" jdbcType="VARCHAR" property="statusCode" />
+    <result column="instance_desc" jdbcType="VARCHAR" property="instanceDesc" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    instance_id, project_id, resource_inner_id, resource_template_id, instance_size, 
+    group_name, create_time, update_time, status_code, instance_desc
+  </sql>
+  <select id="selectByProjectIdAndGroupName" parameterType="cn.rongcapital.chorus.das.entity.InstanceInfo"
+  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from instance_info
+    where project_id = #{projectId,jdbcType=BIGINT}
+    and group_name = #{groupName,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from instance_info
+    where instance_id = #{instanceId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectByStatus" parameterType="cn.rongcapital.chorus.das.entity.InstanceInfo" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from instance_info
+    where status_code = #{statusCode,jdbcType=VARCHAR}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from instance_info
+    where instance_id = #{instanceId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.rongcapital.chorus.das.entity.InstanceInfo">
+    <selectKey keyProperty="instanceId" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into instance_info (project_id, resource_inner_id, resource_template_id, 
+      instance_size, group_name, create_time, 
+      update_time, status_code, instance_desc
+      )
+    values (#{projectId,jdbcType=BIGINT}, #{resourceInnerId,jdbcType=BIGINT}, #{resourceTemplateId,jdbcType=BIGINT}, 
+      #{instanceSize,jdbcType=INTEGER}, #{groupName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{statusCode,jdbcType=VARCHAR}, #{instanceDesc,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.rongcapital.chorus.das.entity.InstanceInfo">
+    <selectKey keyProperty="instanceId" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into instance_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="projectId != null">
+        project_id,
+      </if>
+      <if test="resourceInnerId != null">
+        resource_inner_id,
+      </if>
+      <if test="resourceTemplateId != null">
+        resource_template_id,
+      </if>
+      <if test="instanceSize != null">
+        instance_size,
+      </if>
+      <if test="groupName != null">
+        group_name,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="statusCode != null">
+        status_code,
+      </if>
+      <if test="instanceDesc != null">
+        instance_desc,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="projectId != null">
+        #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="resourceInnerId != null">
+        #{resourceInnerId,jdbcType=BIGINT},
+      </if>
+      <if test="resourceTemplateId != null">
+        #{resourceTemplateId,jdbcType=BIGINT},
+      </if>
+      <if test="instanceSize != null">
+        #{instanceSize,jdbcType=INTEGER},
+      </if>
+      <if test="groupName != null">
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusCode != null">
+        #{statusCode,jdbcType=VARCHAR},
+      </if>
+      <if test="instanceDesc != null">
+        #{instanceDesc,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.rongcapital.chorus.das.entity.InstanceInfo">
+    update instance_info
+    <set>
+      <if test="projectId != null">
+        project_id = #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="resourceInnerId != null">
+        resource_inner_id = #{resourceInnerId,jdbcType=BIGINT},
+      </if>
+      <if test="resourceTemplateId != null">
+        resource_template_id = #{resourceTemplateId,jdbcType=BIGINT},
+      </if>
+      <if test="instanceSize != null">
+        instance_size = #{instanceSize,jdbcType=INTEGER},
+      </if>
+      <if test="groupName != null">
+        group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusCode != null">
+        status_code = #{statusCode,jdbcType=VARCHAR},
+      </if>
+      <if test="instanceDesc != null">
+        instance_desc = #{instanceDesc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where instance_id = #{instanceId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.rongcapital.chorus.das.entity.InstanceInfo">
+    update instance_info
+    set project_id = #{projectId,jdbcType=BIGINT},
+      resource_inner_id = #{resourceInnerId,jdbcType=BIGINT},
+      resource_template_id = #{resourceTemplateId,jdbcType=BIGINT},
+      instance_size = #{instanceSize,jdbcType=INTEGER},
+      group_name = #{groupName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status_code = #{statusCode,jdbcType=VARCHAR},
+      instance_desc = #{instanceDesc,jdbcType=VARCHAR}
+    where instance_id = #{instanceId,jdbcType=BIGINT}
+  </update>
+</mapper>

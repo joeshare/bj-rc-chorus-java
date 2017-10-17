@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.rongcapital.chorus.das.dao.ResourceOutMapper">
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.ResourceOut">
+    <id column="resource_out_id" jdbcType="BIGINT" property="resourceOutId" />
+    <result column="project_id" jdbcType="BIGINT" property="projectId" />
+    <result column="resource_name" jdbcType="VARCHAR" property="resourceName" />
+    <result column="resource_source" jdbcType="VARCHAR" property="resourceSource" />
+    <result column="resource_usage" jdbcType="VARCHAR" property="resourceUsage" />
+    <result column="resource_desc" jdbcType="VARCHAR" property="resourceDesc" />
+    <result column="storage_type" jdbcType="VARCHAR" property="storageType" />
+    <result column="conn_url" jdbcType="VARCHAR" property="connUrl" />
+    <result column="conn_port" jdbcType="VARCHAR" property="connPort" />
+    <result column="conn_user" jdbcType="VARCHAR" property="connUser" />
+    <result column="conn_pass" jdbcType="VARCHAR" property="connPass" />
+    <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user_id" jdbcType="VARCHAR" property="updateUserId" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="end_date" jdbcType="DATE" property="endDate" />
+    <result column="status_code" jdbcType="VARCHAR" property="statusCode" />
+    <result column="database_name" jdbcType="VARCHAR" property="databaseName" />
+    <result column="conn_host" jdbcType="VARCHAR" property="connHost" />
+    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+    <result column="guid" jdbcType="VARCHAR" property="guid"/>
+    <result column="path" jdbcType="VARCHAR" property="path"/>
+    <result column="connect_mode" jdbcType="VARCHAR" property="connectMode"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    resource_out_id, project_id, resource_name, resource_source, resource_usage, resource_desc, 
+    storage_type, conn_url, conn_port, conn_user, conn_pass, create_user_id, create_time, 
+    update_user_id, update_time, end_date, status_code, database_name, conn_host, create_user_name,guid, path, connect_mode
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from resource_out
+    where resource_out_id = #{resourceOutId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from resource_out
+    where resource_out_id = #{resourceOutId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.rongcapital.chorus.das.entity.ResourceOut" useGeneratedKeys="true" keyProperty="resourceOutId">
+    insert into resource_out (resource_out_id, project_id, resource_name, 
+      resource_source, resource_usage, resource_desc, 
+      storage_type, conn_url, conn_port, 
+      conn_user, conn_pass, create_user_id, 
+      create_time, update_user_id, update_time, 
+      end_date, status_code, database_name, 
+      conn_host, create_user_name, path, connect_mode)
+    values (#{resourceOutId,jdbcType=BIGINT}, #{projectId,jdbcType=BIGINT}, #{resourceName,jdbcType=VARCHAR}, 
+      #{resourceSource,jdbcType=VARCHAR}, #{resourceUsage,jdbcType=VARCHAR}, #{resourceDesc,jdbcType=VARCHAR}, 
+      #{storageType,jdbcType=VARCHAR}, #{connUrl,jdbcType=VARCHAR}, #{connPort,jdbcType=VARCHAR}, 
+      #{connUser,jdbcType=VARCHAR}, #{connPass,jdbcType=VARCHAR}, #{createUserId,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{endDate,jdbcType=DATE}, #{statusCode,jdbcType=VARCHAR}, #{databaseName,jdbcType=VARCHAR}, 
+      #{connHost,jdbcType=VARCHAR}, #{createUserName,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, #{connectMode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.rongcapital.chorus.das.entity.ResourceOut">
+    insert into resource_out
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="resourceOutId != null">
+        resource_out_id,
+      </if>
+      <if test="projectId != null">
+        project_id,
+      </if>
+      <if test="resourceName != null">
+        resource_name,
+      </if>
+      <if test="resourceSource != null">
+        resource_source,
+      </if>
+      <if test="resourceUsage != null">
+        resource_usage,
+      </if>
+      <if test="resourceDesc != null">
+        resource_desc,
+      </if>
+      <if test="storageType != null">
+        storage_type,
+      </if>
+      <if test="connUrl != null">
+        conn_url,
+      </if>
+      <if test="connPort != null">
+        conn_port,
+      </if>
+      <if test="connUser != null">
+        conn_user,
+      </if>
+      <if test="connPass != null">
+        conn_pass,
+      </if>
+      <if test="createUserId != null">
+        create_user_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUserId != null">
+        update_user_id,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="endDate != null">
+        end_date,
+      </if>
+      <if test="statusCode != null">
+        status_code,
+      </if>
+      <if test="databaseName != null">
+        database_name,
+      </if>
+      <if test="connHost != null">
+        conn_host,
+      </if>
+      <if test="createUserName != null">
+        create_user_name,
+      </if>
+      <if test="path != null">
+        path,
+      </if>
+      <if test="connectMode != null">
+        connect_mode,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="resourceOutId != null">
+        #{resourceOutId,jdbcType=BIGINT},
+      </if>
+      <if test="projectId != null">
+        #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="resourceName != null">
+        #{resourceName,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceSource != null">
+        #{resourceSource,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceUsage != null">
+        #{resourceUsage,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceDesc != null">
+        #{resourceDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="storageType != null">
+        #{storageType,jdbcType=VARCHAR},
+      </if>
+      <if test="connUrl != null">
+        #{connUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="connPort != null">
+        #{connPort,jdbcType=VARCHAR},
+      </if>
+      <if test="connUser != null">
+        #{connUser,jdbcType=VARCHAR},
+      </if>
+      <if test="connPass != null">
+        #{connPass,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null">
+        #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null">
+        #{updateUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null">
+        #{endDate,jdbcType=DATE},
+      </if>
+      <if test="statusCode != null">
+        #{statusCode,jdbcType=VARCHAR},
+      </if>
+      <if test="databaseName != null">
+        #{databaseName,jdbcType=VARCHAR},
+      </if>
+      <if test="connHost != null">
+        #{connHost,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserName != null">
+        #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null">
+        #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="connectMode != null">
+        #{connectMode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.rongcapital.chorus.das.entity.ResourceOut">
+    update resource_out
+    <set>
+      <if test="projectId != null">
+        project_id = #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="resourceName != null">
+        resource_name = #{resourceName,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceSource != null">
+        resource_source = #{resourceSource,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceUsage != null">
+        resource_usage = #{resourceUsage,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceDesc != null">
+        resource_desc = #{resourceDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="storageType != null">
+        storage_type = #{storageType,jdbcType=VARCHAR},
+      </if>
+      <if test="connUrl != null">
+        conn_url = #{connUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="connPort != null">
+        conn_port = #{connPort,jdbcType=VARCHAR},
+      </if>
+      <if test="connUser != null">
+        conn_user = #{connUser,jdbcType=VARCHAR},
+      </if>
+      <if test="connPass != null">
+        conn_pass = #{connPass,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null">
+        create_user_id = #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null">
+        update_user_id = #{updateUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null">
+        end_date = #{endDate,jdbcType=DATE},
+      </if>
+      <if test="statusCode != null">
+        status_code = #{statusCode,jdbcType=VARCHAR},
+      </if>
+      <if test="databaseName != null">
+        database_name = #{databaseName,jdbcType=VARCHAR},
+      </if>
+      <if test="connHost != null">
+        conn_host = #{connHost,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserName != null">
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null">
+        path = #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="connectMode != null">
+        connect_mode = #{connectMode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where resource_out_id = #{resourceOutId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.rongcapital.chorus.das.entity.ResourceOut">
+    update resource_out
+    set project_id = #{projectId,jdbcType=BIGINT},
+      resource_name = #{resourceName,jdbcType=VARCHAR},
+      resource_source = #{resourceSource,jdbcType=VARCHAR},
+      resource_usage = #{resourceUsage,jdbcType=VARCHAR},
+      resource_desc = #{resourceDesc,jdbcType=VARCHAR},
+      storage_type = #{storageType,jdbcType=VARCHAR},
+      conn_url = #{connUrl,jdbcType=VARCHAR},
+      conn_port = #{connPort,jdbcType=VARCHAR},
+      conn_user = #{connUser,jdbcType=VARCHAR},
+      conn_pass = #{connPass,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user_id = #{updateUserId,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      end_date = #{endDate,jdbcType=DATE},
+      status_code = #{statusCode,jdbcType=VARCHAR},
+      database_name = #{databaseName,jdbcType=VARCHAR},
+      conn_host = #{connHost,jdbcType=VARCHAR},
+      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      path = #{path,jdbcType=VARCHAR},
+      connect_mode = #{connectMode,jdbcType=VARCHAR}
+    where resource_out_id = #{resourceOutId,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateGuid">
+    update resource_out set guid = #{guid,jdbcType=VARCHAR} where resource_out_id = #{resourceOutId,jdbcType=BIGINT}
+  </update>
+
+  <select id="unSyncedResourceOut" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM resource_out
+    WHERE
+    storage_type = #{storageType}
+    AND guid = ''
+  </select>
+</mapper>

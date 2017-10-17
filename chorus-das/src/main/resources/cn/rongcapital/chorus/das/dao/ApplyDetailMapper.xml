@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.rongcapital.chorus.das.dao.ApplyDetailMapper">
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.ApplyDetail">
+    <id column="apply_detail_id" jdbcType="BIGINT" property="applyDetailId" />
+    <result column="apply_form_id" jdbcType="BIGINT" property="applyFormId" />
+    <result column="table_info_id" jdbcType="BIGINT" property="tableInfoId" />
+    <result column="column_info_id" jdbcType="BIGINT" property="columnInfoId" />
+    <result column="status_code" jdbcType="VARCHAR" property="statusCode" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    apply_detail_id, apply_form_id, table_info_id, column_info_id, status_code
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from apply_detail
+    where apply_detail_id = #{applyDetailId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from apply_detail
+    where apply_detail_id = #{applyDetailId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.rongcapital.chorus.das.entity.ApplyDetail">
+    <selectKey keyProperty="applyDetailId" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into apply_detail (apply_form_id, table_info_id, column_info_id, 
+      status_code)
+    values (#{applyFormId,jdbcType=BIGINT}, #{tableInfoId,jdbcType=BIGINT}, #{columnInfoId,jdbcType=BIGINT}, 
+      #{statusCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.rongcapital.chorus.das.entity.ApplyDetail">
+    <selectKey keyProperty="applyDetailId" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into apply_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="applyFormId != null">
+        apply_form_id,
+      </if>
+      <if test="tableInfoId != null">
+        table_info_id,
+      </if>
+      <if test="columnInfoId != null">
+        column_info_id,
+      </if>
+      <if test="statusCode != null">
+        status_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="applyFormId != null">
+        #{applyFormId,jdbcType=BIGINT},
+      </if>
+      <if test="tableInfoId != null">
+        #{tableInfoId,jdbcType=BIGINT},
+      </if>
+      <if test="columnInfoId != null">
+        #{columnInfoId,jdbcType=BIGINT},
+      </if>
+      <if test="statusCode != null">
+        #{statusCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.rongcapital.chorus.das.entity.ApplyDetail">
+    update apply_detail
+    <set>
+      <if test="applyFormId != null">
+        apply_form_id = #{applyFormId,jdbcType=BIGINT},
+      </if>
+      <if test="tableInfoId != null">
+        table_info_id = #{tableInfoId,jdbcType=BIGINT},
+      </if>
+      <if test="columnInfoId != null">
+        column_info_id = #{columnInfoId,jdbcType=BIGINT},
+      </if>
+      <if test="statusCode != null">
+        status_code = #{statusCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where apply_detail_id = #{applyDetailId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.rongcapital.chorus.das.entity.ApplyDetail">
+    update apply_detail
+    set apply_form_id = #{applyFormId,jdbcType=BIGINT},
+      table_info_id = #{tableInfoId,jdbcType=BIGINT},
+      column_info_id = #{columnInfoId,jdbcType=BIGINT},
+      status_code = #{statusCode,jdbcType=VARCHAR}
+    where apply_detail_id = #{applyDetailId,jdbcType=BIGINT}
+  </update>
+</mapper>

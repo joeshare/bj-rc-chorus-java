@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:hdp="http://www.springframework.org/schema/hadoop"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:batch="http://www.springframework.org/schema/batch"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/hadoop
+		http://www.springframework.org/schema/hadoop/spring-hadoop.xsd
+		http://www.springframework.org/schema/batch
+		http://www.springframework.org/schema/batch/spring-batch.xsd
+		http://www.springframework.org/schema/util
+		http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<batch:job id="chorusSqoopJob">
+		<batch:step id="chorusSqoopStep">
+			<batch:tasklet ref="chorusSqoopTasklet" />
+		</batch:step>
+	</batch:job>
+<!-- 	<bean id="chorusSqoopTasklet" class="cn.rongcapital.chorus.springxd.modules.tasklet.HelloSpringXDTasklet"> -->
+<!-- 	</bean> -->
+	<bean id="chorusSqoopTasklet" class="cn.rongcapital.chorus.springxd.modules.tasklet.SqoopTasklet">
+		<property name="arguments">
+			<list>
+				<value>${command}</value>
+				<value>${args}</value>
+<!-- 				<value>jdbc.url=${url}</value> -->
+<!-- 				<value>jdbc.username=${username}</value> -->
+<!-- 				<value>jdbc.password=${password}</value> -->
+				<value>fs.defaultFS=${fsUri}</value>
+				<value>yarn.resourcemanager.hostname=${resourceManagerHost}</value>
+				<value>yarn.resourcemanager.address=${resourceManagerHost}:${resourceManagerPort}</value>
+				<value>yarn.resourcemanager.scheduler.address=${spring.hadoop.resourceManagerSchedulerAddress:}</value>
+				<value>yarn.application.classpath=${spring.hadoop.yarnApplicationClasspath}</value>
+				<value>mapreduce.jobhistory.address=${spring.hadoop.jobHistoryAddress:}</value>
+				<value>mapreduce.framework.name=yarn</value>
+				<value>security.authMethod=${spring.hadoop.security.authMethod:}</value>
+				<value>security.userPrincipal=${spring.hadoop.security.userPrincipal:}</value>
+				<value>security.userKeytab=${spring.hadoop.security.userKeytab:}</value>
+				<value>security.namenodePrincipal=${spring.hadoop.security.namenodePrincipal:}</value>
+				<value>security.rmManagerPrincipal=${spring.hadoop.security.rmManagerPrincipal:}</value>
+				<value>security.jobHistoryPrincipal=${spring.hadoop.security.jobHistoryPrincipal:}</value>
+			</list>
+		</property>
+		<property name="hadoopProperties" ref="hadoopProperties"/>
+		<property name="libjars" value="${libjars}"/>
+	</bean>
+
+	<util:properties id="hadoopProperties" location="${xd.config.home}/hadoop.properties"/>
+
+	<hdp:configuration register-url-handler="false" properties-ref="hadoopProperties">
+		fs.defaultFS=${fsUri}
+	</hdp:configuration>
+
+</beans>

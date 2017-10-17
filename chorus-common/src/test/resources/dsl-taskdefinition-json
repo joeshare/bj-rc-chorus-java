@@ -1,0 +1,21 @@
+{
+  "name": "task_definition",
+  "retryCount": 3,
+  "timeoutSeconds": 3600,
+  "inputKeys": [
+    "sourceRequestId",
+    "qcElementType"
+  ],
+  "outputKeys": [
+    "state",
+    "skipped",
+    "result"
+  ],
+  "staticParams": {
+    "args": "--connect 'jdbc:mysql://10.200.48.79:3306/dps?useUnicode=true&characterEncoding=utf-8' --username 'dps' --password 'Dps@10.200.48.MySQL' --table 'tb_user' --hive-import --hive-database 'chorus_lhz' --hive-table 'multicol_table' --hive-overwrite --hive-partition-key 'p_date' --hive-partition-value '$today_yyyyMMdd' --delete-target-dir --columns 'id,status,name' --m 1",
+    "command": "import"
+  },
+  "timeoutPolicy": "RETRY",
+  "retryLogic": "FIXED",
+  "retryDelaySeconds": 10
+}

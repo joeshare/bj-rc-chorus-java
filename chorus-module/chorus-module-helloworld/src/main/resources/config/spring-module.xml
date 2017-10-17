@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:batch="http://www.springframework.org/schema/batch"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/batch
+		http://www.springframework.org/schema/batch/spring-batch.xsd">
+
+	<batch:job id="job">
+		<batch:step id="helloSpringXDStep">
+			<batch:tasklet ref="helloSpringXDTasklet" />
+		</batch:step>
+		<batch:listeners>
+			<batch:listener ref="logListener"></batch:listener>
+		</batch:listeners>
+	</batch:job>
+
+	<bean class="cn.rongcapital.log.JobListenerForLog" id="logListener"></bean>
+
+	<bean id="helloSpringXDTasklet"
+		class="cn.rongcapital.chorus.module.job.HelloSpringXDTasklet" />
+
+	<!-- Job module 对应多个Steps如下 -->
+
+	<!--
+	 <batch:job id="multiStepDemo">
+		<batch:step id="step1" next="step2">
+			<batch:tasklet ref="helloSpringXDTasklet" />
+		</batch:step>
+		<batch:step id="step2">
+			<batch:tasklet ref="helloSpringXDTasklet" />
+		</batch:step>
+	</batch:job>
+	 -->
+</beans>

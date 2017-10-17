@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.chorus.das.dao.ResourceInnerMapper" >
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.ResourceInner" >
+    <id column="resource_inner_id" property="resourceInnerId" jdbcType="BIGINT" />
+    <result column="project_id" property="projectId" jdbcType="BIGINT" />
+    <result column="create_user_id" property="createUserId" jdbcType="VARCHAR" />
+    <result column="resource_cpu" property="resourceCpu" jdbcType="INTEGER" />
+    <result column="resource_memory" property="resourceMemory" jdbcType="INTEGER" />
+    <result column="resource_storage" property="resourceStorage" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status_code" property="statusCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    resource_inner_id, project_id, create_user_id, resource_cpu, resource_memory, resource_storage, 
+    create_time, update_time, status_code
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from resource_inner
+    where resource_inner_id = #{resourceInnerId,jdbcType=BIGINT}
+  </select>
+  <select id="selectByProjectId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from resource_inner
+    where project_id = #{projectId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from resource_inner
+    where resource_inner_id = #{resourceInnerId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.rongcapital.chorus.das.entity.ResourceInner" useGeneratedKeys="true" keyProperty="resourceInnerId">
+    insert into resource_inner (resource_inner_id, project_id, create_user_id, 
+      resource_cpu, resource_memory, resource_storage, 
+      create_time, update_time, status_code
+      )
+    values (#{resourceInnerId,jdbcType=BIGINT}, #{projectId,jdbcType=BIGINT}, #{createUserId,jdbcType=VARCHAR}, 
+      #{resourceCpu,jdbcType=INTEGER}, #{resourceMemory,jdbcType=INTEGER}, #{resourceStorage,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{statusCode,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.rongcapital.chorus.das.entity.ResourceInner" useGeneratedKeys="true" keyProperty="resourceInnerId">
+    insert into resource_inner
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="resourceInnerId != null" >
+        resource_inner_id,
+      </if>
+      <if test="projectId != null" >
+        project_id,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="resourceCpu != null" >
+        resource_cpu,
+      </if>
+      <if test="resourceMemory != null" >
+        resource_memory,
+      </if>
+      <if test="resourceStorage != null" >
+        resource_storage,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="statusCode != null" >
+        status_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="resourceInnerId != null" >
+        #{resourceInnerId,jdbcType=BIGINT},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceCpu != null" >
+        #{resourceCpu,jdbcType=INTEGER},
+      </if>
+      <if test="resourceMemory != null" >
+        #{resourceMemory,jdbcType=INTEGER},
+      </if>
+      <if test="resourceStorage != null" >
+        #{resourceStorage,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusCode != null" >
+        #{statusCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.rongcapital.chorus.das.entity.ResourceInner" >
+    update resource_inner
+    <set >
+      <if test="projectId != null" >
+        project_id = #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceCpu != null" >
+        resource_cpu = #{resourceCpu,jdbcType=INTEGER},
+      </if>
+      <if test="resourceMemory != null" >
+        resource_memory = #{resourceMemory,jdbcType=INTEGER},
+      </if>
+      <if test="resourceStorage != null" >
+        resource_storage = #{resourceStorage,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusCode != null" >
+        status_code = #{statusCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where resource_inner_id = #{resourceInnerId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.rongcapital.chorus.das.entity.ResourceInner" >
+    update resource_inner
+    set project_id = #{projectId,jdbcType=BIGINT},
+      create_user_id = #{createUserId,jdbcType=VARCHAR},
+      resource_cpu = #{resourceCpu,jdbcType=INTEGER},
+      resource_memory = #{resourceMemory,jdbcType=INTEGER},
+      resource_storage = #{resourceStorage,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status_code = #{statusCode,jdbcType=VARCHAR}
+    where resource_inner_id = #{resourceInnerId,jdbcType=BIGINT}
+  </update>
+
+
+  <select id="queryUseRate" resultType="java.util.HashMap">
+    select sum(resource_cpu) as cpu,sum(resource_memory) as memory,sum(resource_storage) as storage
+    from resource_inner
+  </select>
+
+  <select id="queryCountNum" resultType="java.lang.Integer">
+    select count(*) from resource_inner
+  </select>
+</mapper>

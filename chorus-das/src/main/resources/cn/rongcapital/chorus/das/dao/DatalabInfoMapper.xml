@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.rongcapital.chorus.das.dao.DatalabInfoMapper">
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.DatalabInfo">
+    <id column="lab_id" jdbcType="BIGINT" property="labId" />
+    <result column="project_code" jdbcType="VARCHAR" property="projectCode" />
+    <result column="lab_code" jdbcType="VARCHAR" property="labCode" />
+    <result column="lab_desc" jdbcType="VARCHAR" property="labDesc" />
+    <result column="lab_name" jdbcType="VARCHAR" property="labName" />
+    <result column="cpu" jdbcType="INTEGER" property="cpu" />
+    <result column="memory" jdbcType="INTEGER" property="memory" />
+    <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    lab_id, project_code, lab_code, lab_desc, lab_name, cpu, memory, create_user_id, 
+    create_user_name, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from datalab_info
+    where lab_id = #{labId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from datalab_info
+    where lab_id = #{labId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.rongcapital.chorus.das.entity.DatalabInfo">
+    insert into datalab_info (lab_id, project_code, lab_code, 
+      lab_desc, lab_name, cpu, 
+      memory, create_user_id, create_user_name, 
+      create_time)
+    values (#{labId,jdbcType=BIGINT}, #{projectCode,jdbcType=VARCHAR}, #{labCode,jdbcType=VARCHAR}, 
+      #{labDesc,jdbcType=VARCHAR}, #{labName,jdbcType=VARCHAR}, #{cpu,jdbcType=INTEGER}, 
+      #{memory,jdbcType=INTEGER}, #{createUserId,jdbcType=VARCHAR}, #{createUserName,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.rongcapital.chorus.das.entity.DatalabInfo">
+    insert into datalab_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="labId != null">
+        lab_id,
+      </if>
+      <if test="projectCode != null">
+        project_code,
+      </if>
+      <if test="labCode != null">
+        lab_code,
+      </if>
+      <if test="labDesc != null">
+        lab_desc,
+      </if>
+      <if test="labName != null">
+        lab_name,
+      </if>
+      <if test="cpu != null">
+        cpu,
+      </if>
+      <if test="memory != null">
+        memory,
+      </if>
+      <if test="createUserId != null">
+        create_user_id,
+      </if>
+      <if test="createUserName != null">
+        create_user_name,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="labId != null">
+        #{labId,jdbcType=BIGINT},
+      </if>
+      <if test="projectCode != null">
+        #{projectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="labCode != null">
+        #{labCode,jdbcType=VARCHAR},
+      </if>
+      <if test="labDesc != null">
+        #{labDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="labName != null">
+        #{labName,jdbcType=VARCHAR},
+      </if>
+      <if test="cpu != null">
+        #{cpu,jdbcType=INTEGER},
+      </if>
+      <if test="memory != null">
+        #{memory,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null">
+        #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserName != null">
+        #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.rongcapital.chorus.das.entity.DatalabInfo">
+    update datalab_info
+    <set>
+      <if test="projectCode != null">
+        project_code = #{projectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="labCode != null">
+        lab_code = #{labCode,jdbcType=VARCHAR},
+      </if>
+      <if test="labDesc != null">
+        lab_desc = #{labDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="labName != null">
+        lab_name = #{labName,jdbcType=VARCHAR},
+      </if>
+      <if test="cpu != null">
+        cpu = #{cpu,jdbcType=INTEGER},
+      </if>
+      <if test="memory != null">
+        memory = #{memory,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null">
+        create_user_id = #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserName != null">
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where lab_id = #{labId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.rongcapital.chorus.das.entity.DatalabInfo">
+    update datalab_info
+    set project_code = #{projectCode,jdbcType=VARCHAR},
+      lab_code = #{labCode,jdbcType=VARCHAR},
+      lab_desc = #{labDesc,jdbcType=VARCHAR},
+      lab_name = #{labName,jdbcType=VARCHAR},
+      cpu = #{cpu,jdbcType=INTEGER},
+      memory = #{memory,jdbcType=INTEGER},
+      create_user_id = #{createUserId,jdbcType=VARCHAR},
+      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where lab_id = #{labId,jdbcType=BIGINT}
+  </update>
+</mapper>

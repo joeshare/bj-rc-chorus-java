@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.rongcapital.chorus.das.dao.ColumnInfoMapper">
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.ColumnInfo">
+    <id column="column_info_id" jdbcType="BIGINT" property="columnInfoId" />
+    <result column="table_info_id" jdbcType="BIGINT" property="tableInfoId" />
+    <result column="column_name" jdbcType="VARCHAR" property="columnName" />
+    <result column="column_desc" jdbcType="VARCHAR" property="columnDesc" />
+    <result column="column_type" jdbcType="VARCHAR" property="columnType" />
+    <result column="column_length" jdbcType="VARCHAR" property="columnLength" />
+    <result column="column_precision" jdbcType="VARCHAR" property="columnPrecision" />
+    <result column="security_level" jdbcType="VARCHAR" property="securityLevel" />
+    <result column="is_key" jdbcType="TINYINT" property="isKey" />
+    <result column="is_ref_key" jdbcType="TINYINT" property="isRefKey" />
+    <result column="is_index" jdbcType="TINYINT" property="isIndex" />
+    <result column="is_null" jdbcType="TINYINT" property="isNull" />
+    <result column="is_partition_key" jdbcType="TINYINT" property="isPartitionKey" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="status_code" jdbcType="VARCHAR" property="statusCode" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    column_info_id, table_info_id, column_name, column_desc, column_type, column_length, 
+    column_precision, security_level, is_key, is_ref_key, is_index, is_null, is_partition_key, 
+    create_time, update_time, status_code
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from column_info
+    where column_info_id = #{columnInfoId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from column_info
+    where column_info_id = #{columnInfoId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.rongcapital.chorus.das.entity.ColumnInfo">
+    insert into column_info (column_info_id, table_info_id, column_name, 
+      column_desc, column_type, column_length, 
+      column_precision, security_level, is_key, 
+      is_ref_key, is_index, is_null, 
+      is_partition_key, create_time, update_time, 
+      status_code)
+    values (#{columnInfoId,jdbcType=BIGINT}, #{tableInfoId,jdbcType=BIGINT}, #{columnName,jdbcType=VARCHAR}, 
+      #{columnDesc,jdbcType=VARCHAR}, #{columnType,jdbcType=VARCHAR}, #{columnLength,jdbcType=VARCHAR}, 
+      #{columnPrecision,jdbcType=VARCHAR}, #{securityLevel,jdbcType=VARCHAR}, #{isKey,jdbcType=TINYINT}, 
+      #{isRefKey,jdbcType=TINYINT}, #{isIndex,jdbcType=TINYINT}, #{isNull,jdbcType=TINYINT}, 
+      #{isPartitionKey,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{statusCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.rongcapital.chorus.das.entity.ColumnInfo">
+    insert into column_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="columnInfoId != null">
+        column_info_id,
+      </if>
+      <if test="tableInfoId != null">
+        table_info_id,
+      </if>
+      <if test="columnName != null">
+        column_name,
+      </if>
+      <if test="columnDesc != null">
+        column_desc,
+      </if>
+      <if test="columnType != null">
+        column_type,
+      </if>
+      <if test="columnLength != null">
+        column_length,
+      </if>
+      <if test="columnPrecision != null">
+        column_precision,
+      </if>
+      <if test="securityLevel != null">
+        security_level,
+      </if>
+      <if test="isKey != null">
+        is_key,
+      </if>
+      <if test="isRefKey != null">
+        is_ref_key,
+      </if>
+      <if test="isIndex != null">
+        is_index,
+      </if>
+      <if test="isNull != null">
+        is_null,
+      </if>
+      <if test="isPartitionKey != null">
+        is_partition_key,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="statusCode != null">
+        status_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="columnInfoId != null">
+        #{columnInfoId,jdbcType=BIGINT},
+      </if>
+      <if test="tableInfoId != null">
+        #{tableInfoId,jdbcType=BIGINT},
+      </if>
+      <if test="columnName != null">
+        #{columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="columnDesc != null">
+        #{columnDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="columnType != null">
+        #{columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="columnLength != null">
+        #{columnLength,jdbcType=VARCHAR},
+      </if>
+      <if test="columnPrecision != null">
+        #{columnPrecision,jdbcType=VARCHAR},
+      </if>
+      <if test="securityLevel != null">
+        #{securityLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="isKey != null">
+        #{isKey,jdbcType=TINYINT},
+      </if>
+      <if test="isRefKey != null">
+        #{isRefKey,jdbcType=TINYINT},
+      </if>
+      <if test="isIndex != null">
+        #{isIndex,jdbcType=TINYINT},
+      </if>
+      <if test="isNull != null">
+        #{isNull,jdbcType=TINYINT},
+      </if>
+      <if test="isPartitionKey != null">
+        #{isPartitionKey,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusCode != null">
+        #{statusCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.rongcapital.chorus.das.entity.ColumnInfo">
+    update column_info
+    <set>
+      <if test="tableInfoId != null">
+        table_info_id = #{tableInfoId,jdbcType=BIGINT},
+      </if>
+      <if test="columnName != null">
+        column_name = #{columnName,jdbcType=VARCHAR},
+      </if>
+      <if test="columnDesc != null">
+        column_desc = #{columnDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="columnType != null">
+        column_type = #{columnType,jdbcType=VARCHAR},
+      </if>
+      <if test="columnLength != null">
+        column_length = #{columnLength,jdbcType=VARCHAR},
+      </if>
+      <if test="columnPrecision != null">
+        column_precision = #{columnPrecision,jdbcType=VARCHAR},
+      </if>
+      <if test="securityLevel != null">
+        security_level = #{securityLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="isKey != null">
+        is_key = #{isKey,jdbcType=TINYINT},
+      </if>
+      <if test="isRefKey != null">
+        is_ref_key = #{isRefKey,jdbcType=TINYINT},
+      </if>
+      <if test="isIndex != null">
+        is_index = #{isIndex,jdbcType=TINYINT},
+      </if>
+      <if test="isNull != null">
+        is_null = #{isNull,jdbcType=TINYINT},
+      </if>
+      <if test="isPartitionKey != null">
+        is_partition_key = #{isPartitionKey,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusCode != null">
+        status_code = #{statusCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where column_info_id = #{columnInfoId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.rongcapital.chorus.das.entity.ColumnInfo">
+    update column_info
+    set table_info_id = #{tableInfoId,jdbcType=BIGINT},
+      column_name = #{columnName,jdbcType=VARCHAR},
+      column_desc = #{columnDesc,jdbcType=VARCHAR},
+      column_type = #{columnType,jdbcType=VARCHAR},
+      column_length = #{columnLength,jdbcType=VARCHAR},
+      column_precision = #{columnPrecision,jdbcType=VARCHAR},
+      security_level = #{securityLevel,jdbcType=VARCHAR},
+      is_key = #{isKey,jdbcType=TINYINT},
+      is_ref_key = #{isRefKey,jdbcType=TINYINT},
+      is_index = #{isIndex,jdbcType=TINYINT},
+      is_null = #{isNull,jdbcType=TINYINT},
+      is_partition_key = #{isPartitionKey,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status_code = #{statusCode,jdbcType=VARCHAR}
+    where column_info_id = #{columnInfoId,jdbcType=BIGINT}
+  </update>
+</mapper>

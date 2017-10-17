@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.rongcapital.chorus.das.dao.TableInfoMapper">
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.TableInfo">
+    <id column="table_info_id" jdbcType="BIGINT" property="tableInfoId" />
+    <result column="project_id" jdbcType="BIGINT" property="projectId" />
+    <result column="table_code" jdbcType="VARCHAR" property="tableCode" />
+    <result column="table_name" jdbcType="VARCHAR" property="tableName" />
+    <result column="data_field" jdbcType="VARCHAR" property="dataField" />
+    <result column="table_type" jdbcType="VARCHAR" property="tableType" />
+    <result column="is_snapshot" jdbcType="VARCHAR" property="isSnapshot" />
+    <result column="update_frequence" jdbcType="VARCHAR" property="updateFrequence" />
+    <result column="sla" jdbcType="VARCHAR" property="sla" />
+    <result column="security_level" jdbcType="VARCHAR" property="securityLevel" />
+    <result column="is_open" jdbcType="TINYINT" property="isOpen" />
+    <result column="table_des" jdbcType="VARCHAR" property="tableDes" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="status_code" jdbcType="VARCHAR" property="statusCode" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    table_info_id, project_id, table_code, table_name, data_field, table_type, is_snapshot, 
+    update_frequence, sla, security_level, is_open, table_des, create_time, update_time, 
+    status_code
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from table_info
+    where table_info_id = #{tableInfoId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from table_info
+    where table_info_id = #{tableInfoId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.rongcapital.chorus.das.entity.TableInfo">
+    <selectKey keyProperty="tableInfoId" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into table_info (project_id, table_code, table_name, 
+      data_field, table_type, is_snapshot, 
+      update_frequence, sla, security_level, 
+      is_open, table_des, create_time, 
+      update_time, status_code)
+    values (#{projectId,jdbcType=BIGINT}, #{tableCode,jdbcType=VARCHAR}, #{tableName,jdbcType=VARCHAR}, 
+      #{dataField,jdbcType=VARCHAR}, #{tableType,jdbcType=VARCHAR}, #{isSnapshot,jdbcType=VARCHAR}, 
+      #{updateFrequence,jdbcType=VARCHAR}, #{sla,jdbcType=VARCHAR}, #{securityLevel,jdbcType=VARCHAR}, 
+      #{isOpen,jdbcType=TINYINT}, #{tableDes,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{statusCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.rongcapital.chorus.das.entity.TableInfo">
+    <selectKey keyProperty="tableInfoId" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into table_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="projectId != null">
+        project_id,
+      </if>
+      <if test="tableCode != null">
+        table_code,
+      </if>
+      <if test="tableName != null">
+        table_name,
+      </if>
+      <if test="dataField != null">
+        data_field,
+      </if>
+      <if test="tableType != null">
+        table_type,
+      </if>
+      <if test="isSnapshot != null">
+        is_snapshot,
+      </if>
+      <if test="updateFrequence != null">
+        update_frequence,
+      </if>
+      <if test="sla != null">
+        sla,
+      </if>
+      <if test="securityLevel != null">
+        security_level,
+      </if>
+      <if test="isOpen != null">
+        is_open,
+      </if>
+      <if test="tableDes != null">
+        table_des,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="statusCode != null">
+        status_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="projectId != null">
+        #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="tableCode != null">
+        #{tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tableName != null">
+        #{tableName,jdbcType=VARCHAR},
+      </if>
+      <if test="dataField != null">
+        #{dataField,jdbcType=VARCHAR},
+      </if>
+      <if test="tableType != null">
+        #{tableType,jdbcType=VARCHAR},
+      </if>
+      <if test="isSnapshot != null">
+        #{isSnapshot,jdbcType=VARCHAR},
+      </if>
+      <if test="updateFrequence != null">
+        #{updateFrequence,jdbcType=VARCHAR},
+      </if>
+      <if test="sla != null">
+        #{sla,jdbcType=VARCHAR},
+      </if>
+      <if test="securityLevel != null">
+        #{securityLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="isOpen != null">
+        #{isOpen,jdbcType=TINYINT},
+      </if>
+      <if test="tableDes != null">
+        #{tableDes,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusCode != null">
+        #{statusCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.rongcapital.chorus.das.entity.TableInfo">
+    update table_info
+    <set>
+      <if test="projectId != null">
+        project_id = #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="tableCode != null">
+        table_code = #{tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tableName != null">
+        table_name = #{tableName,jdbcType=VARCHAR},
+      </if>
+      <if test="dataField != null">
+        data_field = #{dataField,jdbcType=VARCHAR},
+      </if>
+      <if test="tableType != null">
+        table_type = #{tableType,jdbcType=VARCHAR},
+      </if>
+      <if test="isSnapshot != null">
+        is_snapshot = #{isSnapshot,jdbcType=VARCHAR},
+      </if>
+      <if test="updateFrequence != null">
+        update_frequence = #{updateFrequence,jdbcType=VARCHAR},
+      </if>
+      <if test="sla != null">
+        sla = #{sla,jdbcType=VARCHAR},
+      </if>
+      <if test="securityLevel != null">
+        security_level = #{securityLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="isOpen != null">
+        is_open = #{isOpen,jdbcType=TINYINT},
+      </if>
+      <if test="tableDes != null">
+        table_des = #{tableDes,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusCode != null">
+        status_code = #{statusCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where table_info_id = #{tableInfoId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.rongcapital.chorus.das.entity.TableInfo">
+    update table_info
+    set project_id = #{projectId,jdbcType=BIGINT},
+      table_code = #{tableCode,jdbcType=VARCHAR},
+      table_name = #{tableName,jdbcType=VARCHAR},
+      data_field = #{dataField,jdbcType=VARCHAR},
+      table_type = #{tableType,jdbcType=VARCHAR},
+      is_snapshot = #{isSnapshot,jdbcType=VARCHAR},
+      update_frequence = #{updateFrequence,jdbcType=VARCHAR},
+      sla = #{sla,jdbcType=VARCHAR},
+      security_level = #{securityLevel,jdbcType=VARCHAR},
+      is_open = #{isOpen,jdbcType=TINYINT},
+      table_des = #{tableDes,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status_code = #{statusCode,jdbcType=VARCHAR}
+    where table_info_id = #{tableInfoId,jdbcType=BIGINT}
+  </update>
+  <select id="selectTopAttRateTable" resultType="java.util.HashMap">
+    select resourceName,attCount from (
+    select 
+    table_info.table_name as resourceName,
+    table_info.table_info_id as tableInfoId,
+    count(temp.apply_user_id) as attCount 
+    from table_info left join
+	(select distinct table_info_id,apply_user_id from apply_form) as temp
+	on table_info.table_info_id = temp.table_info_id where table_info.project_id=#{projectId}
+	group by tableInfoId order by attCount desc, create_time desc limit #{size}) as result_table
+  </select>
+</mapper>

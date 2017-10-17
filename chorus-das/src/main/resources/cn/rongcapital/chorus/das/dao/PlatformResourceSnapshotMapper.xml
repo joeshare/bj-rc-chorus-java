@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.rongcapital.chorus.das.dao.PlatformResourceSnapshotMapper">
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.PlatformResourceSnapshot">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="snapshot_date" jdbcType="DATE" property="snapshotDate" />
+    <result column="applied_cpu" jdbcType="INTEGER" property="appliedCpu" />
+    <result column="platform_cpu" jdbcType="INTEGER" property="platformCpu" />
+    <result column="applied_memory" jdbcType="INTEGER" property="appliedMemory" />
+    <result column="platform_memory" jdbcType="INTEGER" property="platformMemory" />
+    <result column="applied_storage" jdbcType="BIGINT" property="appliedStorage" />
+    <result column="platform_storage" jdbcType="BIGINT" property="platformStorage" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, snapshot_date, applied_cpu, platform_cpu, applied_memory, platform_memory, applied_storage, 
+    platform_storage, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from platform_resource_snapshot
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from platform_resource_snapshot
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.rongcapital.chorus.das.entity.PlatformResourceSnapshot">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into platform_resource_snapshot (snapshot_date, applied_cpu, platform_cpu, 
+      applied_memory, platform_memory, applied_storage, 
+      platform_storage, create_time)
+    values (#{snapshotDate,jdbcType=DATE}, #{appliedCpu,jdbcType=INTEGER}, #{platformCpu,jdbcType=INTEGER}, 
+      #{appliedMemory,jdbcType=INTEGER}, #{platformMemory,jdbcType=INTEGER}, #{appliedStorage,jdbcType=BIGINT},
+      #{platformStorage,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.rongcapital.chorus.das.entity.PlatformResourceSnapshot">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into platform_resource_snapshot
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="snapshotDate != null">
+        snapshot_date,
+      </if>
+      <if test="appliedCpu != null">
+        applied_cpu,
+      </if>
+      <if test="platformCpu != null">
+        platform_cpu,
+      </if>
+      <if test="appliedMemory != null">
+        applied_memory,
+      </if>
+      <if test="platformMemory != null">
+        platform_memory,
+      </if>
+      <if test="appliedStorage != null">
+        applied_storage,
+      </if>
+      <if test="platformStorage != null">
+        platform_storage,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="snapshotDate != null">
+        #{snapshotDate,jdbcType=DATE},
+      </if>
+      <if test="appliedCpu != null">
+        #{appliedCpu,jdbcType=INTEGER},
+      </if>
+      <if test="platformCpu != null">
+        #{platformCpu,jdbcType=INTEGER},
+      </if>
+      <if test="appliedMemory != null">
+        #{appliedMemory,jdbcType=INTEGER},
+      </if>
+      <if test="platformMemory != null">
+        #{platformMemory,jdbcType=INTEGER},
+      </if>
+      <if test="appliedStorage != null">
+        #{appliedStorage,jdbcType=BIGINT},
+      </if>
+      <if test="platformStorage != null">
+        #{platformStorage,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.rongcapital.chorus.das.entity.PlatformResourceSnapshot">
+    update platform_resource_snapshot
+    <set>
+      <if test="snapshotDate != null">
+        snapshot_date = #{snapshotDate,jdbcType=DATE},
+      </if>
+      <if test="appliedCpu != null">
+        applied_cpu = #{appliedCpu,jdbcType=INTEGER},
+      </if>
+      <if test="platformCpu != null">
+        platform_cpu = #{platformCpu,jdbcType=INTEGER},
+      </if>
+      <if test="appliedMemory != null">
+        applied_memory = #{appliedMemory,jdbcType=INTEGER},
+      </if>
+      <if test="platformMemory != null">
+        platform_memory = #{platformMemory,jdbcType=INTEGER},
+      </if>
+      <if test="appliedStorage != null">
+        applied_storage = #{appliedStorage,jdbcType=BIGINT},
+      </if>
+      <if test="platformStorage != null">
+        platform_storage = #{platformStorage,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.rongcapital.chorus.das.entity.PlatformResourceSnapshot">
+    update platform_resource_snapshot
+    set snapshot_date = #{snapshotDate,jdbcType=DATE},
+      applied_cpu = #{appliedCpu,jdbcType=INTEGER},
+      platform_cpu = #{platformCpu,jdbcType=INTEGER},
+      applied_memory = #{appliedMemory,jdbcType=INTEGER},
+      platform_memory = #{platformMemory,jdbcType=INTEGER},
+      applied_storage = #{appliedStorage,jdbcType=BIGINT},
+      platform_storage = #{platformStorage,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="getUseRateTrend" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from  platform_resource_snapshot
+    where snapshot_date>=#{snapshotDate}
+  </select>
+</mapper>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.chorus.das.dao.v2.ApplyDetailDOMapperV2" >
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.ApplyDetailV2" >
+    <id column="apply_detail_id" property="applyDetailId" jdbcType="BIGINT" />
+    <result column="apply_form_id" property="applyFormId" jdbcType="BIGINT" />
+    <result column="table_info_id" property="tableInfoId" jdbcType="BIGINT" />
+    <result column="column_info_id" property="columnInfoId" jdbcType="BIGINT" />
+    <result column="status_code" property="statusCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ApplyDetailMap" type="cn.rongcapital.chorus.das.entity.ApplyDetailDOV2" >
+    <id column="apply_detail_id" property="applyDetailId" jdbcType="BIGINT" />
+    <result column="column_info_id" property="columnInfoId" jdbcType="BIGINT" />
+
+    <!-- column_info table removed -->
+    <result column="column_name" property="columnName" jdbcType="VARCHAR" />
+    <result column="column_desc" property="columnDesc" jdbcType="VARCHAR" />
+    <result column="security_level" property="securityLevel" jdbcType="VARCHAR" />
+    <!-- column_info table removed -->
+
+    <result column="status_name" property="statusName" jdbcType="VARCHAR" />
+    <result column="reason" property="reason" jdbcType="VARCHAR" />
+    <result column="deal_instruction" property="dealInstruction" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    apply_detail_id, apply_form_id, table_info_id, column_info_id, status_code
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from apply_detail_v2
+    where apply_detail_id = #{applyDetailId,jdbcType=BIGINT}
+  </select>
+  <select id="selectByFormId"  resultMap="ApplyDetailMap" parameterType="java.lang.Long" >
+  SELECT
+    ad.apply_detail_id ,
+    ad.column_info_id ,
+-- column_info table removed
+--     ci.column_name ,
+--     ci.column_desc ,
+--     ci.security_level ,
+    cs.status_name,
+    af.reason,
+    af.deal_instruction
+  FROM
+    apply_detail_v2 ad
+-- column_info table removed
+--   JOIN column_info ci ON ad.table_info_id = ci.table_info_id
+--   AND ad.column_info_id = ci.column_info_id
+  left join apply_form_v2 af on af.apply_form_id = ad.apply_form_id
+  LEFT JOIN common_status cs ON af.status_code = cs.status_code
+  WHERE
+    ad.apply_form_id = #{applyFormId,jdbcType=BIGINT}
+  ORDER BY
+    ad.column_info_id
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from apply_detail_v2
+    where apply_detail_id = #{applyDetailId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.rongcapital.chorus.das.entity.ApplyDetail" >
+    insert into apply_detail_v2 (apply_detail_id, apply_form_id, table_info_id,
+      column_info_id, status_code
+      )
+    values (#{applyDetailId,jdbcType=BIGINT}, #{applyFormId,jdbcType=BIGINT}, #{tableInfoId,jdbcType=VARCHAR},
+      #{columnInfoId,jdbcType=VARCHAR}, #{statusCode,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="bulkInsert" parameterType="java.util.List">
+
+    insert into apply_detail_v2 ( apply_form_id, table_info_id,
+    column_info_id, status_code
+    )
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      ( #{item.applyFormId,jdbcType=BIGINT}, #{item.tableInfoId,jdbcType=BIGINT},
+      #{item.columnInfoId,jdbcType=VARCHAR}, #{item.statusCode,jdbcType=VARCHAR}
+      )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="cn.rongcapital.chorus.das.entity.ApplyDetail" >
+    insert into apply_detail_v2
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="applyDetailId != null" >
+        apply_detail_id,
+      </if>
+      <if test="applyFormId != null" >
+        apply_form_id,
+      </if>
+      <if test="tableInfoId != null" >
+        table_info_id,
+      </if>
+      <if test="columnInfoId != null" >
+        column_info_id,
+      </if>
+      <if test="statusCode != null" >
+        status_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="applyDetailId != null" >
+        #{applyDetailId,jdbcType=BIGINT},
+      </if>
+      <if test="applyFormId != null" >
+        #{applyFormId,jdbcType=BIGINT},
+      </if>
+      <if test="tableInfoId != null" >
+        #{tableInfoId,jdbcType=VARCHAR},
+      </if>
+      <if test="columnInfoId != null" >
+        #{columnInfoId,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCode != null" >
+        #{statusCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.rongcapital.chorus.das.entity.ApplyDetail" >
+    update apply_detail_v2
+    <set >
+      <if test="applyFormId != null" >
+        apply_form_id = #{applyFormId,jdbcType=BIGINT},
+      </if>
+      <if test="tableInfoId != null" >
+        table_info_id = #{tableInfoId,jdbcType=VARCHAR},
+      </if>
+      <if test="columnInfoId != null" >
+        column_info_id = #{columnInfoId,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCode != null" >
+        status_code = #{statusCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where apply_detail_id = #{applyDetailId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.rongcapital.chorus.das.entity.ApplyDetail" >
+    update apply_detail_v2
+    set apply_form_id = #{applyFormId,jdbcType=BIGINT},
+      table_info_id = #{tableInfoId,jdbcType=VARCHAR},
+      column_info_id = #{columnInfoId,jdbcType=VARCHAR},
+      status_code = #{statusCode,jdbcType=VARCHAR}
+    where apply_detail_id = #{applyDetailId,jdbcType=BIGINT}
+  </update>
+  <update id="updateStatusCode" parameterType="cn.rongcapital.chorus.das.entity.ApplyDetail">
+    update apply_detail_v2
+    set status_code = #{statusCode,jdbcType=VARCHAR}
+    where apply_detail_id = #{applyDetailId,jdbcType=BIGINT}
+  </update>
+
+  <select id="getAllApplyInfoOfProject" resultType="java.util.HashMap">
+    SELECT t.tableId AS tableInfoId,COUNT(t.userId) AS  attCount
+    FROM ( SELECT DISTINCT table_info_id AS tableId, apply_user_id AS  userId FROM apply_form_v2 WHERE project_id=#{projectId} ) as t
+    group by t.tableId order by attCount desc limit #{size}
+  </select>
+</mapper>

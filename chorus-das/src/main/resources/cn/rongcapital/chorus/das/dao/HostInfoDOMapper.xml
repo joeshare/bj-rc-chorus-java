@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.chorus.das.dao.HostInfoDOMapper">
+    <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.HostInfo">
+        <id column="host_id" property="hostId" jdbcType="BIGINT"/>
+        <result column="host_name" property="hostName" jdbcType="VARCHAR"/>
+        <result column="cpu" property="cpu" jdbcType="INTEGER"/>
+        <result column="memory" property="memory" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="status_code" property="statusCode" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="ReservationSizeMap" type="cn.rongcapital.chorus.das.entity.HostReservationSizeDO">
+        <id column="host_id" property="hostId" jdbcType="BIGINT"/>
+        <result column="cpu" property="cpu" jdbcType="INTEGER"/>
+        <result column="memory" property="memory" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        host_id, host_name, cpu, memory, create_time, update_time, status_code
+    </sql>
+    <select id="selectByEnvironment" resultMap="BaseResultMap" parameterType="java.util.List">
+        select
+        hi.host_id, hi.host_name, hi.cpu, hi.memory, hi.create_time, hi.update_time, hi.status_code
+        from host_info hi
+        INNER JOIN host_env he on he.host_id = hi.host_id
+        WHERE he.environment_id in
+        <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+            #{item, jdbcType=BIGINT}
+        </foreach>
+        GROUP BY hi.host_id
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from host_info
+    </select>
+
+    <select id="selectReservationList" resultMap="ReservationSizeMap">
+        SELECT hi.host_id,
+            sum(rt.resource_cpu) AS cpu,
+            sum(rt.resource_memory) AS memory
+        FROM host_info hi
+        INNER JOIN instance_host ih ON ih.host_id = hi.host_id
+        INNER JOIN instance_info ii ON ii.instance_id = ih.instance_id AND ii.status_code IN ('2001', '2003')
+        INNER JOIN resource_template rt ON rt.resource_template_id = ii.resource_template_id
+        GROUP BY hi.host_id
+    </select>
+</mapper>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.chorus.das.dao.MetaDataMigrateMapper" >
+  <resultMap id="TableInfoResultMap" type="cn.rongcapital.chorus.das.entity.TableInfo">
+    <id column="table_info_id" jdbcType="BIGINT" property="tableInfoId" />
+    <result column="project_id" jdbcType="BIGINT" property="projectId" />
+    <result column="table_code" jdbcType="VARCHAR" property="tableCode" />
+    <result column="table_name" jdbcType="VARCHAR" property="tableName" />
+    <result column="data_field" jdbcType="VARCHAR" property="dataField" />
+    <result column="table_type" jdbcType="VARCHAR" property="tableType" />
+    <result column="is_snapshot" jdbcType="VARCHAR" property="isSnapshot" />
+    <result column="update_frequence" jdbcType="VARCHAR" property="updateFrequence" />
+    <result column="sla" jdbcType="VARCHAR" property="sla" />
+    <result column="security_level" jdbcType="VARCHAR" property="securityLevel" />
+    <result column="is_open" jdbcType="TINYINT" property="isOpen" />
+    <result column="table_des" jdbcType="VARCHAR" property="tableDes" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="status_code" jdbcType="VARCHAR" property="statusCode" />
+  </resultMap>
+
+  <resultMap id="ProjectInfoResultMap" type="cn.rongcapital.chorus.das.entity.ProjectInfo">
+    <id column="project_id" jdbcType="BIGINT" property="projectId" />
+    <result column="project_code" jdbcType="VARCHAR" property="projectCode" />
+    <result column="project_name" jdbcType="VARCHAR" property="projectName" />
+    <result column="project_desc" jdbcType="VARCHAR" property="projectDesc" />
+    <result column="project_manager_id" jdbcType="VARCHAR" property="projectManagerId" />
+    <result column="manager_telephone" jdbcType="VARCHAR" property="managerTelephone" />
+    <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user_id" jdbcType="VARCHAR" property="updateUserId" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="caas_topic_id" jdbcType="BIGINT" property="caasTopicId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+  </resultMap>
+
+  <sql id="Table_Info_Column_List">
+    table_info_id, project_id, table_code, table_name, data_field, table_type, is_snapshot,
+    update_frequence, sla, security_level, is_open, table_des, create_time, update_time,
+    status_code
+  </sql>
+
+  <sql id="Project_Info_Column_List">
+    project_id, project_code, project_name, project_desc, project_manager_id, manager_telephone,
+    create_user_id, create_time, update_user_id, update_time, caas_topic_id, user_name
+  </sql>
+
+  <select id="getAllProjectInfos" resultMap="ProjectInfoResultMap">
+    select
+    <include refid="Project_Info_Column_List" />
+    from project_info
+  </select>
+
+  <select id="getAllTableInfos"  resultMap="TableInfoResultMap">
+    select
+    <include refid="Table_Info_Column_List" />
+    from table_info
+    where status_code = '1310' and atlas_guid is null
+  </select>
+
+  <update id="updateTableInfoGuid" >
+    update table_info set atlas_guid=#{guid,jdbcType=VARCHAR}
+    where table_info_id=#{tableInfoId, jdbcType=BIGINT}
+  </update>
+  <update id="updateColumnInfoGuid" >
+    update column_info set atlas_guid=#{guid,jdbcType=VARCHAR}
+    where column_info_id=#{columnInfoId,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.chorus.das.dao.EnvironmentInfoMapper" >
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.EnvironmentInfo" >
+    <id column="environment_id" property="environmentId" jdbcType="BIGINT" />
+    <result column="environment_name" property="environmentName" jdbcType="VARCHAR" />
+    <result column="environment_version" property="environmentVersion" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status_code" property="statusCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    environment_id, environment_name, environment_version, create_time, update_time, 
+    status_code
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from environment_info
+    where environment_id = #{environmentId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from environment_info
+    where environment_id = #{environmentId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.rongcapital.chorus.das.entity.EnvironmentInfo" >
+    insert into environment_info (environment_id, environment_name, environment_version, 
+      create_time, update_time, status_code
+      )
+    values (#{environmentId,jdbcType=BIGINT}, #{environmentName,jdbcType=VARCHAR}, #{environmentVersion,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{statusCode,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.rongcapital.chorus.das.entity.EnvironmentInfo" >
+    insert into environment_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="environmentId != null" >
+        environment_id,
+      </if>
+      <if test="environmentName != null" >
+        environment_name,
+      </if>
+      <if test="environmentVersion != null" >
+        environment_version,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="statusCode != null" >
+        status_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="environmentId != null" >
+        #{environmentId,jdbcType=BIGINT},
+      </if>
+      <if test="environmentName != null" >
+        #{environmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="environmentVersion != null" >
+        #{environmentVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusCode != null" >
+        #{statusCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.rongcapital.chorus.das.entity.EnvironmentInfo" >
+    update environment_info
+    <set >
+      <if test="environmentName != null" >
+        environment_name = #{environmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="environmentVersion != null" >
+        environment_version = #{environmentVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusCode != null" >
+        status_code = #{statusCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where environment_id = #{environmentId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.rongcapital.chorus.das.entity.EnvironmentInfo" >
+    update environment_info
+    set environment_name = #{environmentName,jdbcType=VARCHAR},
+      environment_version = #{environmentVersion,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status_code = #{statusCode,jdbcType=VARCHAR}
+    where environment_id = #{environmentId,jdbcType=BIGINT}
+  </update>
+</mapper>

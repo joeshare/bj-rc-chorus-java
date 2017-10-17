@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.rongcapital.chorus.das.dao.ApplyFormMapper">
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.ApplyForm">
+    <id column="apply_form_id" jdbcType="BIGINT" property="applyFormId" />
+    <result column="table_info_id" jdbcType="BIGINT" property="tableInfoId" />
+    <result column="end_date" jdbcType="DATE" property="endDate" />
+    <result column="apply_user_id" jdbcType="VARCHAR" property="applyUserId" />
+    <result column="apply_time" jdbcType="TIMESTAMP" property="applyTime" />
+    <result column="reason" jdbcType="VARCHAR" property="reason" />
+    <result column="deal_user_id" jdbcType="VARCHAR" property="dealUserId" />
+    <result column="deal_instruction" jdbcType="VARCHAR" property="dealInstruction" />
+    <result column="deal_time" jdbcType="TIMESTAMP" property="dealTime" />
+    <result column="status_code" jdbcType="VARCHAR" property="statusCode" />
+    <result column="apply_user_name" jdbcType="VARCHAR" property="applyUserName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    apply_form_id, table_info_id, end_date, apply_user_id, apply_time, reason, deal_user_id, 
+    deal_instruction, deal_time, status_code, apply_user_name
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from apply_form
+    where apply_form_id = #{applyFormId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from apply_form
+    where apply_form_id = #{applyFormId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.rongcapital.chorus.das.entity.ApplyForm">
+    insert into apply_form (apply_form_id, table_info_id, end_date, 
+      apply_user_id, apply_time, reason, 
+      deal_user_id, deal_instruction, deal_time, 
+      status_code, apply_user_name)
+    values (#{applyFormId,jdbcType=BIGINT}, #{tableInfoId,jdbcType=BIGINT}, #{endDate,jdbcType=DATE}, 
+      #{applyUserId,jdbcType=VARCHAR}, #{applyTime,jdbcType=TIMESTAMP}, #{reason,jdbcType=VARCHAR}, 
+      #{dealUserId,jdbcType=VARCHAR}, #{dealInstruction,jdbcType=VARCHAR}, #{dealTime,jdbcType=TIMESTAMP}, 
+      #{statusCode,jdbcType=VARCHAR}, #{applyUserName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.rongcapital.chorus.das.entity.ApplyForm">
+    <selectKey keyProperty="applyFormId" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into apply_form
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="applyFormId != null">
+        apply_form_id,
+      </if>
+      <if test="tableInfoId != null">
+        table_info_id,
+      </if>
+      <if test="endDate != null">
+        end_date,
+      </if>
+      <if test="applyUserId != null">
+        apply_user_id,
+      </if>
+      <if test="applyTime != null">
+        apply_time,
+      </if>
+      <if test="reason != null">
+        reason,
+      </if>
+      <if test="dealUserId != null">
+        deal_user_id,
+      </if>
+      <if test="dealInstruction != null">
+        deal_instruction,
+      </if>
+      <if test="dealTime != null">
+        deal_time,
+      </if>
+      <if test="statusCode != null">
+        status_code,
+      </if>
+      <if test="applyUserName != null">
+        apply_user_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="applyFormId != null">
+        #{applyFormId,jdbcType=BIGINT},
+      </if>
+      <if test="tableInfoId != null">
+        #{tableInfoId,jdbcType=BIGINT},
+      </if>
+      <if test="endDate != null">
+        #{endDate,jdbcType=DATE},
+      </if>
+      <if test="applyUserId != null">
+        #{applyUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyTime != null">
+        #{applyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reason != null">
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="dealUserId != null">
+        #{dealUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="dealInstruction != null">
+        #{dealInstruction,jdbcType=VARCHAR},
+      </if>
+      <if test="dealTime != null">
+        #{dealTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusCode != null">
+        #{statusCode,jdbcType=VARCHAR},
+      </if>
+      <if test="applyUserName != null">
+        #{applyUserName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.rongcapital.chorus.das.entity.ApplyForm">
+    update apply_form
+    <set>
+      <if test="tableInfoId != null">
+        table_info_id = #{tableInfoId,jdbcType=BIGINT},
+      </if>
+      <if test="endDate != null">
+        end_date = #{endDate,jdbcType=DATE},
+      </if>
+      <if test="applyUserId != null">
+        apply_user_id = #{applyUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyTime != null">
+        apply_time = #{applyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reason != null">
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="dealUserId != null">
+        deal_user_id = #{dealUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="dealInstruction != null">
+        deal_instruction = #{dealInstruction,jdbcType=VARCHAR},
+      </if>
+      <if test="dealTime != null">
+        deal_time = #{dealTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusCode != null">
+        status_code = #{statusCode,jdbcType=VARCHAR},
+      </if>
+      <if test="applyUserName != null">
+        apply_user_name = #{applyUserName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where apply_form_id = #{applyFormId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.rongcapital.chorus.das.entity.ApplyForm">
+    update apply_form
+    set table_info_id = #{tableInfoId,jdbcType=BIGINT},
+      end_date = #{endDate,jdbcType=DATE},
+      apply_user_id = #{applyUserId,jdbcType=VARCHAR},
+      apply_time = #{applyTime,jdbcType=TIMESTAMP},
+      reason = #{reason,jdbcType=VARCHAR},
+      deal_user_id = #{dealUserId,jdbcType=VARCHAR},
+      deal_instruction = #{dealInstruction,jdbcType=VARCHAR},
+      deal_time = #{dealTime,jdbcType=TIMESTAMP},
+      status_code = #{statusCode,jdbcType=VARCHAR},
+      apply_user_name = #{applyUserName,jdbcType=VARCHAR}
+    where apply_form_id = #{applyFormId,jdbcType=BIGINT}
+  </update>
+</mapper>

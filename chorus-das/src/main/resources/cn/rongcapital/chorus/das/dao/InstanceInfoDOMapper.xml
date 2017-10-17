@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.chorus.das.dao.InstanceInfoDOMapper">
+    <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.InstanceInfo">
+        <id column="instance_id" property="instanceId" jdbcType="BIGINT"/>
+        <result column="project_id" property="projectId" jdbcType="BIGINT"/>
+        <result column="resource_inner_id" property="resourceInnerId" jdbcType="BIGINT"/>
+        <result column="resource_template_id" property="resourceTemplateId" jdbcType="BIGINT"/>
+        <result column="instance_size" property="instanceSize" jdbcType="INTEGER"/>
+        <result column="group_name" property="groupName" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="status_code" property="statusCode" jdbcType="VARCHAR"/>
+        <result column="instance_desc" jdbcType="VARCHAR" property="instanceDesc"/>
+    </resultMap>
+    <resultMap id="BaseResultDOMap" type="cn.rongcapital.chorus.das.entity.InstanceInfoDO">
+        <id column="instance_id" property="instanceId" jdbcType="BIGINT"/>
+        <result column="project_id" property="projectId" jdbcType="BIGINT"/>
+        <result column="resource_inner_id" property="resourceInnerId" jdbcType="BIGINT"/>
+        <!--<result column="resource_template_id" property="resourceTemplateId" jdbcType="BIGINT"/>-->
+        <result column="instance_size" property="instanceSize" jdbcType="INTEGER"/>
+        <result column="group_name" property="groupName" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <!--<result column="status_code" property="statusCode" jdbcType="VARCHAR"/>-->
+        <result column="instance_desc" jdbcType="VARCHAR" property="instanceDesc"/>
+        <association property="commonStatus" javaType="cn.rongcapital.chorus.das.entity.CommonStatus">
+            <id column="status_id" property="statusId" jdbcType="BIGINT"/>
+            <result column="status_code" property="statusCode" jdbcType="VARCHAR"/>
+            <result column="status_name" property="statusName" jdbcType="VARCHAR"/>
+            <result column="status_type" property="statusType" jdbcType="VARCHAR"/>
+        </association>
+        <association property="resourceTemplate" javaType="cn.rongcapital.chorus.das.entity.ResourceTemplate">
+            <id column="resource_template_id" property="resourceTemplateId" jdbcType="BIGINT"/>
+            <result column="resource_name" property="resourceName" jdbcType="VARCHAR"/>
+            <result column="resource_cpu" property="resourceCpu" jdbcType="INTEGER"/>
+            <result column="resource_memory" property="resourceMemory" jdbcType="INTEGER"/>
+            <result column="resource_storage" property="resourceStorage" jdbcType="INTEGER"/>
+        </association>
+        <collection property="environmentInfoList" ofType="cn.rongcapital.chorus.das.entity.EnvironmentInfo">
+            <id column="environment_id" property="environmentId" jdbcType="BIGINT"/>
+            <result column="environment_name" property="environmentName" jdbcType="VARCHAR"/>
+            <result column="environment_version" property="environmentVersion" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+    <resultMap id="WithTempResultMap" type="cn.rongcapital.chorus.das.entity.InstanceInfoDO">
+        <id column="instance_id" property="instanceId" jdbcType="BIGINT"/>
+        <result column="instance_size" property="instanceSize" jdbcType="INTEGER"/>
+        <result column="group_name" property="groupName" jdbcType="VARCHAR"/>
+        <result column="resource_cpu" property="resourceCpu" jdbcType="INTEGER"/>
+        <result column="resource_memory" property="resourceMemory" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap id="BaseResultWithHostMap" type="cn.rongcapital.chorus.das.entity.InstanceInfoWithHostsDO">
+        <id column="instance_id" property="instanceId" jdbcType="BIGINT"/>
+        <result column="project_id" property="projectId" jdbcType="BIGINT"/>
+        <result column="resource_inner_id" property="resourceInnerId" jdbcType="BIGINT"/>
+        <result column="instance_size" property="instanceSize" jdbcType="INTEGER"/>
+        <result column="group_name" property="groupName" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="status_code" property="statusCode" jdbcType="VARCHAR"/>
+        <result column="instance_desc" jdbcType="VARCHAR" property="instanceDesc"/>
+        <association property="resourceTemplate" javaType="cn.rongcapital.chorus.das.entity.ResourceTemplate">
+            <id column="resource_template_id" property="resourceTemplateId" jdbcType="BIGINT"/>
+            <result column="resource_name" property="resourceName" jdbcType="VARCHAR"/>
+            <result column="resource_cpu" property="resourceCpu" jdbcType="INTEGER"/>
+            <result column="resource_memory" property="resourceMemory" jdbcType="INTEGER"/>
+            <result column="resource_storage" property="resourceStorage" jdbcType="INTEGER"/>
+        </association>
+    </resultMap>
+    <sql id="Base_Column_List">
+    instance_id, project_id, resource_inner_id, resource_template_id, instance_size, 
+    group_name, create_time, update_time, status_code, instance_desc
+  </sql>
+    <select id="selectByProjectId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from instance_info
+        where project_id = #{projectId,jdbcType=BIGINT}
+    </select>
+    <select id="selectDOByProjectId" resultMap="BaseResultDOMap" parameterType="java.lang.Long">
+        SELECT
+        i.instance_id, i.project_id, i.resource_inner_id, i.instance_size,
+        i.group_name, i.create_time, i.update_time, i.instance_desc,
+
+        c.status_code, c.status_name, c.status_type,
+        r.resource_template_id, r.resource_name, r.resource_cpu, r.resource_memory, r.resource_storage,
+        e.environment_id, e.environment_name, e.environment_version
+        FROM instance_info i
+        INNER JOIN common_status c on c.status_code = i.status_code
+        INNER JOIN resource_template r on r.resource_template_id = i.resource_template_id
+        LEFT JOIN instance_environment_mapping m on m.instance_id = i.instance_id
+        LEFT JOIN environment_info e on e.environment_id = m.environment_id
+        WHERE i.project_id = #{projectId,jdbcType=BIGINT} AND i.status_code <![CDATA[ <> ]]> '2104'
+    </select>
+    <select id="selectByStatusCode" resultMap="BaseResultWithHostMap" parameterType="java.util.List">
+        select
+          i.instance_id, i.project_id, i.resource_inner_id, i.instance_size,
+          i.group_name, i.create_time, i.update_time, i.instance_desc, i.status_code,
+
+          r.resource_template_id, r.resource_name, r.resource_cpu, r.resource_memory, r.resource_storage
+        from instance_info i
+        inner join resource_template r on r.resource_template_id = i.resource_template_id
+          where i.status_code in
+          <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+            #{item, jdbcType=VARCHAR}
+          </foreach>
+    </select>
+
+    <select id="selectByProjectIdAndStatusCode" resultMap="BaseResultWithHostMap" parameterType="java.util.List">
+        select
+            i.instance_id, i.project_id, i.resource_inner_id, i.instance_size,
+            i.group_name, i.create_time, i.update_time, i.instance_desc, i.status_code,
+
+            r.resource_template_id, r.resource_name, r.resource_cpu, r.resource_memory, r.resource_storage
+        from instance_info i
+        inner join resource_template r on r.resource_template_id = i.resource_template_id
+            where i.project_id = #{projectId,jdbcType=BIGINT}
+            and i.status_code in
+            <foreach collection="statusCodeList" item="item" index="index" separator="," open="(" close=")">
+                #{item, jdbcType=VARCHAR}
+            </foreach>
+    </select>
+
+    <select id="getDOById" resultMap="BaseResultDOMap" parameterType="java.lang.Long">
+        SELECT
+        i.instance_id, i.project_id, i.resource_inner_id, i.instance_size,
+        i.group_name, i.create_time, i.update_time, i.instance_desc,
+
+        c.status_code, c.status_name, c.status_type,
+        r.resource_template_id, r.resource_name, r.resource_cpu, r.resource_memory, r.resource_storage,
+        e.environment_id, e.environment_name, e.environment_version
+        FROM instance_info i
+        INNER JOIN common_status c on c.status_code = i.status_code
+        INNER JOIN resource_template r on r.resource_template_id = i.resource_template_id
+        LEFT JOIN instance_environment_mapping m on m.instance_id = i.instance_id
+        LEFT JOIN environment_info e on e.environment_id = m.environment_id
+        WHERE i.instance_id = #{instanceId,jdbcType=BIGINT}
+    </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from instance_info
+    </select>
+
+</mapper>

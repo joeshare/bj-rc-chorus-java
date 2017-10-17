@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.chorus.das.dao.v2.TableAuthorityMapperV2" >
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.TableAuthorityV2" >
+    <id column="table_authority_id" property="tableAuthorityId" jdbcType="BIGINT" />
+    <result column="project_id" property="projectId" jdbcType="BIGINT" />
+    <result column="table_info_id" property="tableInfoId" jdbcType="VARCHAR" />
+    <result column="table_name" property="tableName" jdbcType="VARCHAR" />
+    <result column="column_info_id" property="columnInfoId" jdbcType="VARCHAR" />
+    <result column="column_name" property="columnName" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="end_date" property="endDate" jdbcType="DATE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    table_authority_id, table_info_id, column_info_id, user_id, end_date,table_name,column_name,project_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from table_authority_v2
+    where table_authority_id = #{tableAuthorityId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from table_authority_v2
+    where table_authority_id = #{tableAuthorityId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.rongcapital.chorus.das.entity.TableAuthorityV2" >
+    insert into table_authority_v2 (table_authority_id, table_info_id, column_info_id,
+      user_id, end_date,project_id,table_name,column_name)
+    values (#{tableAuthorityId,jdbcType=BIGINT}, #{tableInfoId,jdbcType=VARCHAR}, #{columnInfoId,jdbcType=VARCHAR},
+      #{userId,jdbcType=VARCHAR}, #{endDate,jdbcType=DATE},#{projectId,jdbcType=BIGINT},#{tableName,jdbcType=VARCHAR},#{columnName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.rongcapital.chorus.das.entity.TableAuthorityV2" >
+    insert into table_authority_v2
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tableAuthorityId != null" >
+        table_authority_id,
+      </if>
+      <if test="tableInfoId != null" >
+        table_info_id,
+      </if>
+      <if test="columnInfoId != null" >
+        column_info_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="endDate != null" >
+        end_date,
+      </if>
+      <if test="projectId != null" >
+        project_id,
+      </if>
+      <if test="tableName != null" >
+        table_name,
+      </if>
+      <if test="columnName != null" >
+        column_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tableAuthorityId != null" >
+        #{tableAuthorityId,jdbcType=BIGINT},
+      </if>
+      <if test="tableInfoId != null" >
+        #{tableInfoId,jdbcType=VARCHAR},
+      </if>
+      <if test="columnInfoId != null" >
+        #{columnInfoId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=DATE},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="tableName != null" >
+        #{tableName,jdbcType=VARCHAR},
+      </if>
+      <if test="columnName != null" >
+        #{columnName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.rongcapital.chorus.das.entity.TableAuthorityV2" >
+    update table_authority_v2
+    <set >
+      <if test="tableInfoId != null" >
+        table_info_id = #{tableInfoId,jdbcType=VARCHAR},
+      </if>
+      <if test="columnInfoId != null" >
+        column_info_id = #{columnInfoId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="endDate != null" >
+        end_date = #{endDate,jdbcType=DATE},
+      </if>
+
+      <if test="projectId != null" >
+        project_id = #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="tableName != null" >
+        table_name = #{tableName,jdbcType=VARCHAR},
+      </if>
+      <if test="columnName != null" >
+        column_name = #{columnName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where table_authority_id = #{tableAuthorityId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.rongcapital.chorus.das.entity.TableAuthorityV2" >
+    update table_authority_v2
+    set table_info_id = #{tableInfoId,jdbcType=VARCHAR},
+      column_info_id = #{columnInfoId,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR},
+      end_date = #{endDate,jdbcType=DATE},
+      project_id= #{projectId,jdbcType=BIGINT},
+      table_name= #{tableName,jdbcType=VARCHAR},
+      column_name= #{columnName,jdbcType=VARCHAR}
+    where table_authority_id = #{tableAuthorityId,jdbcType=BIGINT}
+  </update>
+</mapper>

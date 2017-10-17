@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/integration"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:context="http://www.springframework.org/schema/context"
+             xsi:schemaLocation="
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan
+            base-package="cn.rongcapital.chorus.modules.processor.collect_job_info"></context:component-scan>
+    <channel id="input"/>
+    <outbound-channel-adapter auto-startup="false" channel="input" ref="collectJobInfoProcessor">
+    </outbound-channel-adapter>
+    <channel id="output"/>
+    <beans:bean class="cn.rongcapital.chorus.modules.processor.collect_job_info.CollectJobInfoProcessor"
+                id="collectJobInfoProcessor">
+        <beans:property name="outputChannel" ref="output"></beans:property>
+    </beans:bean>
+</beans:beans>

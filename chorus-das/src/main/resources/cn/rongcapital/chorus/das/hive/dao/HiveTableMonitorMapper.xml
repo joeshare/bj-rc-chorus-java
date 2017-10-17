@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.rongcapital.chorus.das.hive.dao.HiveTableMonitorMapper">
+
+    <resultMap type="cn.rongcapital.chorus.das.entity.HiveTableParam" id="BaseResultMap">
+        <result column="param_key" property="paramKey"/>
+        <result column="param_value" property="paramValue"/>
+    </resultMap>
+    
+    <select id="getTableInfo" resultMap="BaseResultMap">
+        SELECT tbp.PARAM_KEY,
+        tbp.PARAM_VALUE from DBS as db
+        INNER JOIN TBLS tb ON db.DB_ID =
+        tb.DB_ID AND db.`NAME` = #{dbName}
+        left JOIN
+        TABLE_PARAMS tbp ON
+        tb.TBL_ID = tbp.TBL_ID
+        WHERE tb.TBL_NAME = #{tableName} AND
+        tbp.PARAM_KEY in ('totalSize','numRows')
+    </select>
+
+    <select id="getTableInfoPartition" resultMap="BaseResultMap">
+        SELECT
+        pp.PARAM_KEY,sum(pp.PARAM_VALUE) as PARAM_VALUE from DBS as db
+        INNER JOIN TBLS tb ON db.DB_ID = tb.DB_ID AND db.`NAME` =
+        #{dbName}
+        left JOIN `PARTITIONS` p ON tb.TBL_ID = p.TBL_ID
+        LEFT
+        JOIN PARTITION_PARAMS pp ON p.PART_ID = pp.PART_ID
+        WHERE
+        tb.TBL_NAME = #{tableName} AND pp.PARAM_KEY in
+        ('totalSize','numRows')
+        GROUP BY pp.PARAM_KEY
+    </select>
+</mapper>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.chorus.das.dao.ProjectMemberMappingMapper" >
+  <resultMap id="BaseResultMap" type="cn.rongcapital.chorus.das.entity.ProjectMemberMapping" >
+    <id column="project_member_id" property="projectMemberId" jdbcType="BIGINT" />
+    <result column="project_id" property="projectId" jdbcType="BIGINT" />
+    <result column="role_id" property="roleId" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <resultMap id="SimpleProjectInfo" type="cn.rongcapital.chorus.das.entity.ProjectInfoDO" >
+    <result column="project_id" property="projectId" jdbcType="BIGINT" />
+    <result column="project_code" property="projectCode" jdbcType="VARCHAR" />
+    <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="role_id" property="roleId" jdbcType="VARCHAR" />
+    <result column="role_code" property="roleCode" jdbcType="VARCHAR" />
+    <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    project_member_id, project_id, role_id, user_id,create_time,update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from project_member_mapping
+    where project_member_id = #{projectMemberId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from project_member_mapping
+    where project_member_id = #{projectMemberId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.rongcapital.chorus.das.entity.ProjectMemberMapping" >
+    insert into project_member_mapping (project_member_id, project_id, role_id, 
+      user_id)
+    values (#{projectMemberId,jdbcType=BIGINT}, #{projectId,jdbcType=BIGINT}, #{roleId,jdbcType=VARCHAR}, 
+      #{userId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.rongcapital.chorus.das.entity.ProjectMemberMapping" >
+    insert into project_member_mapping
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="projectMemberId != null" >
+        project_member_id,
+      </if>
+      <if test="projectId != null" >
+        project_id,
+      </if>
+      <if test="roleId != null" >
+        role_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="projectMemberId != null" >
+        #{projectMemberId,jdbcType=BIGINT},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="roleId != null" >
+        #{roleId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.rongcapital.chorus.das.entity.ProjectMemberMapping" >
+    update project_member_mapping
+    <set >
+      <if test="projectId != null" >
+        project_id = #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="roleId != null" >
+        role_id = #{roleId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where project_member_id = #{projectMemberId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.rongcapital.chorus.das.entity.ProjectMemberMapping" >
+    update project_member_mapping
+    set project_id = #{projectId,jdbcType=BIGINT},
+      role_id = #{roleId,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR},
+      update_time=#{updateTime,jdbcType=TIMESTAMP}
+    where project_member_id = #{projectMemberId,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectProjectByUserId" resultMap="SimpleProjectInfo">
+    SELECT pi.project_id, pi.project_code, pi.project_name, pmm.user_id /*, r.role_id,r.role_code,r.role_name */
+    FROM project_member_mapping pmm
+    INNER JOIN project_info pi ON pi.project_id = pmm.project_id
+    /*INNER JOIN t_role r ON r.role_id = pmm.role_id*/
+    WHERE pmm.user_id = #{userId,jdbcType=VARCHAR}
+    AND pi.status_code='1205'
+    ORDER BY pi.project_id
+  </select>
+
+  <select id="getProject" resultMap="SimpleProjectInfo">
+    SELECT pi.project_id, pi.project_code, pi.project_name, pmm.user_id, r.role_id,r.role_code,r.role_name
+    FROM project_member_mapping pmm
+    INNER JOIN project_info pi ON pi.project_id = pmm.project_id
+    INNER JOIN t_role r ON r.role_id = pmm.role_id
+    WHERE pmm.user_id = #{userId,jdbcType=VARCHAR} and pmm.project_id = #{projectId,jdbcType=BIGINT}
+    LIMIT 1
+  </select>
+</mapper>

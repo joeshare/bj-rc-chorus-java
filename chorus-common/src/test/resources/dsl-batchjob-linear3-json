@@ -1,0 +1,54 @@
+{
+  "name": "myworkflow1",
+  "description": "my workflow for test",
+  "version": 1,
+  "tasks": [
+    {
+      "name": "mytaskA",
+      "taskReferenceName": "node1",
+      "inputParameters": {
+        "ai1": "${workflow.input.wi1}",
+        "ai2": "${workflow.input.wi2}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0
+    },
+    {
+      "name": "mytaskB",
+      "taskReferenceName": "node2",
+      "inputParameters": {
+        "bi1": "${node1.output.ao1}",
+        "bi2": "${node1.output.ao2}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0
+    },
+    {
+      "name": "mytaskC",
+      "taskReferenceName": "node3",
+      "inputParameters": {
+        "bi1": "${node1.output.ao3}",
+        "bi2": "${node1.output.ao3}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0
+    },
+    {
+      "name": "mytaskD",
+      "taskReferenceName": "node4",
+      "inputParameters": {
+        "bi1": "${node1.output.ao4}",
+        "bi2": "${node1.output.ao4}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0
+    }
+  ],
+  "outputParameters": {
+    "ao1": "${node1.output..ao1}",
+    "ao2": "${node1.output..ao2}",
+    "bo1": "${node2.output..bo1}",
+    "bo2": "${node2.output..bo2}"
+  },
+  "schemaVersion": 2
+}

@@ -1,0 +1,23 @@
+[
+  {
+    "taskName":"chorus_uuid123",
+    "taskId":"245",
+    "moduleType":"1",
+    "moduleName":"file",
+    "taskDSL":"{\"name\": \"streamtimetest\",\"retryCount\": 3,\"timeoutSeconds\": 3600,\"inputKeys\": [\"sourceRequestId\",\"qcElementType\"],\"outputKeys\": [\"state\",\"skipped\",\"result\"],\"staticParams\": {\"name\":\"current-name\"},\"timeoutPolicy\": \"RETRY\",\"retryLogic\": \"FIXED\",\"retryDelaySeconds\": 10}"
+  },
+  {
+    "taskName":"chorus_uuid333",
+    "taskId":"245",
+    "moduleType":"1",
+    "moduleName":"uppercase",
+    "taskDSL":"{\"name\": \"streamlogtest\",\"retryCount\": 3,\"timeoutSeconds\": 3600,\"inputKeys\": [\"sourceRequestId\",\"qcElementType\"],\"outputKeys\": [\"state\",\"skipped\",\"result\"],\"staticParams\": {},\"timeoutPolicy\": \"RETRY\",\"retryLogic\": \"FIXED\",\"retryDelaySeconds\": 10}"
+  },
+  {
+    "taskName":"chorus_uuid444",
+    "taskId":"245",
+    "moduleType":"1",
+    "moduleName":"hdfs",
+    "taskDSL":"{\"name\": \"streamlogtest\",\"retryCount\": 3,\"timeoutSeconds\": 3600,\"inputKeys\": [\"sourceRequestId\",\"qcElementType\"],\"outputKeys\": [\"state\",\"skipped\",\"result\"],\"staticParams\": {\"directory\":\"/xd/incake\",\"fileName\":\"coup\"},\"timeoutPolicy\": \"RETRY\",\"retryLogic\": \"FIXED\",\"retryDelaySeconds\": 10}"
+  }
+]
