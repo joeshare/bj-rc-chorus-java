@@ -304,7 +304,7 @@
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-cas</artifactId>
-                <version>4.0.2.RELEASE</version>
+                <version>4.2.13.RELEASE</version>
             </dependency>
             <dependency>
                 <groupId>com.mysema.querydsl</groupId>
